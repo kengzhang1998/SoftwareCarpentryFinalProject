@@ -28,6 +28,7 @@ decks = Deck()
 card = decks.deal_card()
 print("Dealt card:", card)
 print(len(decks.cards))
+
 class BlackjackGame:
     def __init__(self):
         self.player_chips = 500
@@ -57,7 +58,6 @@ game = BlackjackGame()
 
 import pygame
 pygame.init()
-
 
 import random
 class Deck:
