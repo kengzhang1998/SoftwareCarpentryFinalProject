@@ -6,7 +6,6 @@ The player can customize game settings at the start of the game.
 """
 # This is the main file for final project
 
-
 import random
 class Deck:
     '''
@@ -178,7 +177,6 @@ def settle_bets(players, dealer):
 
 # Initializing the game
 game = BlackjackGame()
-
 
 # Constants
 WIDTH, HEIGHT = 500, 500
