@@ -53,59 +53,73 @@ class BlackjackGame:
         else:
             return "medium"
 
-# Initializing the game
-game = BlackjackGame()
+def place_bets_and_deal(players, dealer, deck):
+    if len(deck) < 52:
+        deck.shuffle()
 
-import pygame
-pygame.init()
+    for player in players:
+        if player.ask_for_chips():
+            player.add_chips()
 
-import random
-class Deck:
-    def __init__(self):
-        self.cards = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"] * 16
-        self.shuffle_deck()
+        bet_amount = player.place_bet()
+        player.bet(bet_amount)
 
-    def shuffle_deck(self):
-        random.shuffle(self.cards)
+        # Deal cards
+        player.hand.append(deck.deal_card(face_up=True))
+        dealer.hand.append(deck.deal_card(face_up=True))
 
-    def deal_card(self):
-        if len(self.cards) < 52:
-            self.shuffle_deck()
-        return self.cards.pop()
+    # Deal second round of cards
+    for player in players:
+        player.hand.append(deck.deal_card(face_up=True))
+    dealer.hand.append(deck.deal_card(face_up=False))
 
-# Creating 4 decks
-decks = Deck()
 
-# Example of dealing a card
-card = decks.deal_card()
-print("Dealt card:", card)
-print(len(decks.cards))
-class BlackjackGame:
-    def __init__(self):
-        self.player_chips = 500
-        self.num_computer_players = self.get_num_computer_players()
-        self.ai_difficulty = self.get_ai_difficulty()
-
-    def get_num_computer_players(self):
+def play_hand(players, dealer, deck):
+    for player in players:
         while True:
-            try:
-                num_players = int(input("Enter number of computer players (1-4): "))
-                if 1 <= num_players <= 4:
-                    return num_players
-                else:
-                    print("Invalid number. Please enter a number between 1 and 4.")
-            except ValueError:
-                print("Invalid input. Please enter a number.")
+            action = player.choose_action()
+            if action == 'hit':
+                player.hand.append(deck.deal_card(face_up=True))
+                if player.calculate_hand_value() > 21:
+                    player.status = 'bust'
+                    break
+            elif action in ['split', 'double', 'stand']:
+                # Implement the logic for split, double, stand
+                break
 
-    def get_ai_difficulty(self):
-        difficulty = input("Choose AI difficulty (Easy/Medium/Hard): ").lower()
-        if difficulty in ["easy", "medium", "hard"]:
-            return difficulty
+    # AI players' turns
+    for player in players:
+        if player.is_ai:
+            ai_logic(player)
+
+    # Dealer's turn
+    while dealer.calculate_hand_value() < 17:
+        dealer.hand.append(deck.deal_card(face_up=True))
+
+def settle_bets(players, dealer):
+    dealer_value = dealer.calculate_hand_value()
+    for player in players:
+        player_value = player.calculate_hand_value()
+        if player.status == 'bust':
+            player.lose_bet()
+        elif player_value == 21 and len(player.hand) == 2:  # Blackjack
+            player.win_bet(1.5)
+        elif dealer_value == 21 and len(dealer.hand) == 2:  # Dealer Blackjack
+            if player_value != 21 or len(player.hand) != 2:
+                player.lose_bet()
+            else:
+                player.tie_bet()
         else:
-            return "medium"
+            if player_value > dealer_value or dealer_value > 21:
+                player.win_bet()
+            elif player_value < dealer_value:
+                player.lose_bet()
+            else:
+                player.tie_bet()
 
 # Initializing the game
 game = BlackjackGame()
+
 
 # Constants
 WIDTH, HEIGHT = 500, 500
