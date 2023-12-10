@@ -57,10 +57,59 @@ class Deck:
     def deal_card(self):
         """
         Deals the top card from the deck.
-        If there are less than 52 cards, reshuffles the deck.
         Returns:
             str: The top card from the deck.
         """
-        #if len(self.cards) < 52:
-            #self.shuffle_deck()
         return self.cards.pop()
+
+    def length(self):
+        """
+        Returns:
+             int: the length of cards in the current deck
+        """
+        return len(self.cards)
+
+
+class Player:
+    """
+    Represents a player in the game
+    """
+    def __init__(self, name, chips):
+        """
+        Initialize an instance of a player and their stats
+        """
+        self.name = name
+        self.bought_chips = chips
+        self.chips = chips
+        self.wins = 0
+        self.losses = 0
+
+    def add_chips(self, amount):
+        """
+        Player add chips to their stash
+        """
+        self.bought_chips += amount
+        self.chips += amount
+
+    def win(self):
+        """
+        Adds player win count by 1
+        """
+        self.wins += 1
+
+    def lose(self):
+        """
+        Adds player lose count by 1
+        """
+        self.losses += 1
+
+    def display_results(self):
+        """
+        Returns summary statistics of user
+        Returns:
+            float: win probability of player
+            int: earnings of player
+        """
+        win_probability = self.wins/(self.wins + self.losses)
+        earnings = self.chips - self.bought_chips
+        return win_probability, earnings
