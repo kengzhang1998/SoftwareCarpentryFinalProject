@@ -125,6 +125,7 @@ class Hand:
         self.cards = []
         self.player = player
         self.value = 0
+        self.blackjack = False
 
     def add_card(self, card):
         """
@@ -164,3 +165,18 @@ class Hand:
             int: current hand value
         """
         return self.value
+
+    def get_blackjack(self):
+        """
+        Returns the blackjack status of the hand
+        Returns:
+            bool: True for blackjack and False for normal cards
+        """
+        return self.blackjack
+
+    def blackjack(self):
+        """
+        Determines if the hand is a blackjack hand
+        """
+        # Needs to be filled
+        pass

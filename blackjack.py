@@ -72,6 +72,9 @@ class BlackjackGame:
         else:
             return "medium"
 
+    def deal_cards(self):
+        pass
+
     def quit(self):
         sys.exit()
 
@@ -133,32 +136,32 @@ def play_hand(players, dealer, deck):
         dealer.hand.append(deck.deal_card(face_up=True))
 
 
-def settle_bets(players, dealer):
-    '''
-    Settles bets at the end of each hand based on the game's outcome.
+def settle_bets(player_hands, dealer_hand):
+    """
+    Settles bets at the end of each round based on the hands of each player.
     Args:
-        players (list of Player objects): The list of players in the game.
-        dealer (Dealer object): The dealer of the game.
-    '''
-    dealer_value = dealer.calculate_hand_value()
-    for player in players:
-        player_value = player.calculate_hand_value()
-        if player.status == 'bust':
-            player.lose_bet()
-        elif player_value == 21 and len(player.hand) == 2:  # Blackjack
-            player.win_bet(1.5)
-        elif dealer_value == 21 and len(dealer.hand) == 2:  # Dealer Blackjack
-            if player_value != 21 or len(player.hand) != 2:
-                player.lose_bet()
+        player_hands (list of Hand objects): The list of hands of players in the game.
+        dealer_hand (Hand object): The hand of dealer this round.
+    """
+    dealer_value = dealer_hand.calc_hand()
+    for player_hand in player_hands:
+        player_value = player_hand.calc_hand()
+        if player_hand.value > 21:
+            player_hand.lose_bet()
+        elif player_hand.get_blackjack:  # Blackjack
+            player_hand.win_bet(1.5)
+        elif dealer_hand.get_blackjack:  # Dealer Blackjack
+            if player_hand.get_blackjack is False:
+                player_hand.lose_bet()
             else:
-                player.tie_bet()
+                player_hand.tie_bet()
         else:
             if player_value > dealer_value or dealer_value > 21:
-                player.win_bet()
+                player_hand.win_bet()
             elif player_value < dealer_value:
-                player.lose_bet()
+                player_hand.lose_bet()
             else:
-                player.tie_bet()
+                player_hand.tie_bet()
 
 
 # Initializing the game
@@ -173,7 +176,6 @@ LIGHT = (170, 170, 170)     # Light color
 red = (255, 0, 0)
 green = (0, 128, 0)
 button_font = pygame.font.SysFont('arial', 35)
-
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
@@ -195,12 +197,12 @@ def button(text, x, y, w, h, action=None):
     click = pygame.mouse.get_pressed()
     if x + w > mouse[0] > x and y + h > mouse[1] > y:
         pygame.draw.rect(screen, LIGHT, (x, y, w, h))
-        if click[0] == 1 is not None:
+        if click[0] == 1 != None:
             action()
     else:
         pygame.draw.rect(screen, DARK, (x, y, w, h))
-    display_text = button_font.render(text, True, red)
-    screen.blit(display_text, ((x+(w/2)-30), (y+(h/2))-20))
+    display_text = button_font.render(text, True, black)
+    screen.blit(display_text, ((x+(w/2)-50), (y+(h/2))-20))
 
 
 # Variable to determine if the game is running
