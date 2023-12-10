@@ -72,10 +72,23 @@ class BlackjackGame:
         else:
             return "medium"
 
-    def deal_cards(self):
+    def deal(self):
+        pass
+
+    def double(self):
+        pass
+
+    def hit(self):
+        pass
+
+    def stand(self):
         pass
 
     def quit(self):
+        """
+
+        :return:
+        """
         sys.exit()
 
 def place_bets_and_deal(players, dealer, deck):
@@ -215,10 +228,10 @@ while running:
             running = False
     screen.fill(green)
 
-    button("DEAL", 30, 100, 150, 50)
-    button("HIT", 30, 200, 150, 50)
-    button("STAND", 30, 300, 150, 50)
-    button("DOUBLE", 30, 400, 150, 50)
+    button("DEAL", 30, 100, 150, 50, game.deal)
+    button("HIT", 30, 200, 150, 50, game.hit)
+    button("STAND", 30, 300, 150, 50, game.stand)
+    button("DOUBLE", 30, 400, 150, 50, game.double)
     button("QUIT", 30, 500, 150, 50, game.quit)
 
     # Update portion of the screen
