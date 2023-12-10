@@ -14,6 +14,8 @@ import sys
 
 # initializing pygame
 pygame.init()
+
+## The following sections are for debugging purposes
 # Creating a deck
 decks = Deck()
 
@@ -31,18 +33,20 @@ class BlackjackGame:
     """
     Manages a game of Blackjack, including players and game settings.
     Attributes:
-        player_chips (int): The amount of chips the player starts with.
+        players (list of player objects): The amount of players in the game
         num_computer_players (int): Number of computer players in the game.
         ai_difficulty (str): The difficulty level of AI players.
+        deck (Deck object): The deck in play
     """
     def __init__(self):
         """
         Initializes a new Blackjack game, setting up player chips, number of computer players,
         and AI difficulty.
         """
-        self.player_chips = 500
+        self.players = []
         self.num_computer_players = self.get_num_computer_players()
         self.ai_difficulty = self.get_ai_difficulty()
+        self.deck = Deck()
 
     def get_num_computer_players(self):
         """
