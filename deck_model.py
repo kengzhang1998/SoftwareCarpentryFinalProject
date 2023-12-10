@@ -2,19 +2,12 @@
 This file includes several basic card models that will be
 used by the blackjack.py file
 """
-from enum import Enum
 import pygame
 import random
 
-
-class Suits(Enum):
-    """
-    List of suits that are available in a standard deck
-    """
-    CLUB = 0
-    SPADE = 1
-    HEART = 2
-    DIAMOND = 3
+# List the available suits and values in a deck
+suits = ['Club', 'Spade', 'Heart', 'Diamond']
+values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 
 
 class Card:
@@ -32,7 +25,7 @@ class Card:
         """
         self.suit = suit
         self.value = value
-        self.image = pygame.image.load('images/' + self.suit.name + str(self.value) + '.jpg')
+        self.image = pygame.image.load('images/' + self.suit + self.value + '.jpg')
 
 
 class Deck:
@@ -43,12 +36,12 @@ class Deck:
     """
     def __init__(self):
         """
-        Initializes the Deck instance with 208 cards (16 sets of 52 cards each)
+        Initializes the Deck instance with 52 cards
         and shuffles them.
         """
         self.cards = []
-        for suit in Suits:
-            for value in Values:
+        for suit in suits:
+            for value in values:
                 self.cards.append(Card(suit, value))
         self.shuffle_deck()
 

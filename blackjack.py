@@ -19,6 +19,7 @@ card = decks.deal_card()
 print("Dealt card:", card)
 print(len(decks.cards))
 
+
 class BlackjackGame:
     '''
     Manages a game of Blackjack, including players and game settings.
@@ -52,6 +53,7 @@ class BlackjackGame:
             except ValueError:
                 print("Invalid input. Please enter a number.")
 
+
     def get_ai_difficulty(self):
         '''
         Asks the user to choose the AI difficulty level.
@@ -63,6 +65,7 @@ class BlackjackGame:
             return difficulty
         else:
             return "medium"
+
 
 def place_bets_and_deal(players, dealer, deck):
     '''
@@ -121,6 +124,7 @@ def play_hand(players, dealer, deck):
     while dealer.calculate_hand_value() < 17:
         dealer.hand.append(deck.deal_card(face_up=True))
 
+
 def settle_bets(players, dealer):
     '''
     Settles bets at the end of each hand based on the game's outcome.
@@ -148,6 +152,7 @@ def settle_bets(players, dealer):
             else:
                 player.tie_bet()
 
+
 # Initializing the game
 game = BlackjackGame()
 
@@ -159,7 +164,7 @@ DARK = (100, 100, 100)      # Dark color
 LIGHT = (170, 170, 170)     # Light color
 red = (255, 0, 0)
 green = (0, 128, 0)
-#font = pygame.font.SysFont('Times New Roman', 35)
+# font = pygame.font.SysFont('Times New Roman', 35)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
