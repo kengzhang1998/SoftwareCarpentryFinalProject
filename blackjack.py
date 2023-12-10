@@ -14,9 +14,13 @@ import pygame
 # Creating 4 decks
 decks = Deck()
 
-# Example of dealing a card
+# Example of dealing 2 cards
 card = decks.deal_card()
-print("Dealt card:", card)
+print("Dealt card:", card.get_value())
+print(len(decks.cards))
+
+card = decks.deal_card()
+print("Dealt card:", card.get_value())
 print(len(decks.cards))
 
 

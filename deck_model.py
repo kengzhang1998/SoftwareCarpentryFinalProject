@@ -25,7 +25,10 @@ class Card:
         """
         self.suit = suit
         self.value = value
-        self.image = pygame.image.load('images/' + self.suit + self.value + '.jpg')
+        self.image = pygame.image.load('images/' + self.suit + self.value + '.png')
+
+    def get_value(self):
+        return self.value
 
 
 class Deck:
@@ -58,6 +61,6 @@ class Deck:
         Returns:
             str: The top card from the deck.
         """
-        if len(self.cards) < 52:
-            self.shuffle_deck()
+        #if len(self.cards) < 52:
+            #self.shuffle_deck()
         return self.cards.pop()
