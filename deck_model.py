@@ -34,3 +34,37 @@ class Card:
         self.value = value
         self.image = pygame.image.load('images/' + self.suit.name + str(self.value) + '.jpg')
 
+
+class Deck:
+    """
+    Represents a deck of playing cards for card games.
+    Attributes:
+        cards (list of str): List of cards in the deck.
+    """
+    def __init__(self):
+        """
+        Initializes the Deck instance with 208 cards (16 sets of 52 cards each)
+        and shuffles them.
+        """
+        self.cards = []
+        for suit in Suits:
+            for value in Values:
+                self.cards.append(Card(suit, value))
+        self.shuffle_deck()
+
+    def shuffle_deck(self):
+        """
+        Randomly shuffles the cards in the deck.
+        """
+        random.shuffle(self.cards)
+
+    def deal_card(self):
+        """
+        Deals the top card from the deck.
+        If there are less than 52 cards, reshuffles the deck.
+        Returns:
+            str: The top card from the deck.
+        """
+        if len(self.cards) < 52:
+            self.shuffle_deck()
+        return self.cards.pop()

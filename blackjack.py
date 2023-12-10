@@ -11,37 +11,6 @@ from deck_model import *
 import random
 import pygame
 
-class Deck:
-    '''
-    Represents a deck of playing cards for card games.
-    Attributes:
-        cards (list of str): List of cards in the deck.
-    '''
-    def __init__(self):
-        '''
-        Initializes the Deck instance with 208 cards (16 sets of 52 cards each) 
-        and shuffles them.
-        '''
-        self.cards = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"] * 16
-        self.shuffle_deck()
-
-    def shuffle_deck(self):
-        '''
-        Randomly shuffles the cards in the deck.
-        '''
-        random.shuffle(self.cards)
-
-    def deal_card(self):
-        '''
-        Deals the top card from the deck. 
-        If there are less than 52 cards, reshuffles the deck.
-        Returns:
-            str: The top card from the deck.
-        '''
-        if len(self.cards) < 52:
-            self.shuffle_deck()
-        return self.cards.pop()
-
 # Creating 4 decks
 decks = Deck()
 
