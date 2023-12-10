@@ -33,7 +33,7 @@ class BlackjackGame:
     """
     Manages a game of Blackjack, including players and game settings.
     Attributes:
-        players (list of player objects): The amount of players in the game
+        players (list of Player objects): The amount of players in the game
         num_computer_players (int): Number of computer players in the game.
         ai_difficulty (str): The difficulty level of AI players.
         deck (Deck object): The deck in play
@@ -44,7 +44,10 @@ class BlackjackGame:
         and AI difficulty.
         """
         self.players = []
-        self.num_computer_players = self.get_num_computer_players()
+        num_computer_players = self.get_num_computer_players()
+        for i in range(num_computer_players + 1):
+            player = Player(500, i)
+            self.players.append(player)
         self.ai_difficulty = self.get_ai_difficulty()
         self.deck = Deck()
 
@@ -77,6 +80,8 @@ class BlackjackGame:
             return "medium"
 
     def deal(self):
+        for player in self.players:
+            pass
         pass
 
     def double(self):

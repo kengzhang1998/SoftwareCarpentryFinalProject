@@ -74,7 +74,7 @@ class Player:
     """
     Represents a player in the game
     """
-    def __init__(self, chips):
+    def __init__(self, chips, player_id):
         """
         Initialize an instance of a player and their stats
         """
@@ -82,6 +82,7 @@ class Player:
         self.chips = chips
         self.wins = 0
         self.losses = 0
+        self.player_id = player_id
 
     def add_chips(self, amount):
         """
