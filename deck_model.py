@@ -74,11 +74,10 @@ class Player:
     """
     Represents a player in the game
     """
-    def __init__(self, name, chips):
+    def __init__(self, chips):
         """
         Initialize an instance of a player and their stats
         """
-        self.name = name
         self.bought_chips = chips
         self.chips = chips
         self.wins = 0
@@ -113,3 +112,71 @@ class Player:
         win_probability = self.wins/(self.wins + self.losses)
         earnings = self.chips - self.bought_chips
         return win_probability, earnings
+
+
+class Hand:
+    """
+    Represents a player/dealer's current hand
+    """
+    def __init__(self, player):
+        """
+        Initializes an instance of a hand
+        """
+        self.cards = []
+        self.player = player
+        self.value = 0
+        self.blackjack = False
+
+    def add_card(self, card):
+        """
+        Add a card to the current hand
+        """
+        self.cards.append(card)
+
+    def calc_hand(self):
+        """
+        Calculate the value of the current hand
+        """
+        ace = []
+        not_ace = []
+        curr_val = 0
+        for card in self.cards:
+            if card.get_value() == 'A':
+                ace.append(card)
+            else:
+                not_ace.append(card)
+        for card in not_ace:
+            if card in 'JQK':
+                curr_val += 10
+            else:
+                curr_val += int(card)
+
+        for card in ace:
+            if curr_val <= 10:
+                curr_val += 11
+            else:
+                curr_val += 1
+        self.value = curr_val
+
+    def get_value(self):
+        """
+        Returns the current hand value
+        Returns:
+            int: current hand value
+        """
+        return self.value
+
+    def get_blackjack(self):
+        """
+        Returns the blackjack status of the hand
+        Returns:
+            bool: True for blackjack and False for normal cards
+        """
+        return self.blackjack
+
+    def blackjack(self):
+        """
+        Determines if the hand is a blackjack hand
+        """
+        # Needs to be filled
+        pass
