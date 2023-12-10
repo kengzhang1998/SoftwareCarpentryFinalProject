@@ -86,8 +86,7 @@ class BlackjackGame:
 
     def quit(self):
         """
-
-        :return:
+        Quits the game if user decides to press the quit button
         """
         sys.exit()
 
@@ -188,7 +187,7 @@ DARK = (100, 100, 100)      # Dark color
 LIGHT = (170, 170, 170)     # Light color
 red = (255, 0, 0)
 green = (0, 128, 0)
-button_font = pygame.font.SysFont('arial', 35)
+button_font = pygame.font.SysFont('arial', 30)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
@@ -198,13 +197,12 @@ pygame.display.set_caption("Blackjack game")
 def button(text, x, y, w, h, action=None):
     """
     Sets up a display button for player actions
-    :param text:
-    :param x:
-    :param y:
-    :param w:
-    :param h:
-    :param action:
-    :return:
+    :param text: text to be added
+    :param x: start horizontal position of button
+    :param y: start vertical position of button
+    :param w: width of button
+    :param h: height of button
+    :param action: associated action of the button
     """
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
@@ -232,7 +230,7 @@ while running:
     button("HIT", 30, 200, 150, 50, game.hit)
     button("STAND", 30, 300, 150, 50, game.stand)
     button("DOUBLE", 30, 400, 150, 50, game.double)
-    button("QUIT", 30, 500, 150, 50, game.quit)
+    button("QUIT", 30, 800, 150, 50, game.quit)
 
     # Update portion of the screen
     pygame.display.flip()
