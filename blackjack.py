@@ -7,8 +7,10 @@ The player can customize game settings at the start of the game.
 
 # This is the main file for final project
 
+from deck_model import *
 import random
 import pygame
+
 class Deck:
     '''
     Represents a deck of playing cards for card games.
