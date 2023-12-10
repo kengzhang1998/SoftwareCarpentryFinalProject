@@ -53,7 +53,6 @@ class BlackjackGame:
             except ValueError:
                 print("Invalid input. Please enter a number.")
 
-
     def get_ai_difficulty(self):
         '''
         Asks the user to choose the AI difficulty level.
