@@ -23,7 +23,6 @@ card = decks.deal_card()
 print("Dealt card:", card.get_value())
 print(len(decks.cards))
 
-
 class BlackjackGame:
     """
     Manages a game of Blackjack, including players and game settings.
