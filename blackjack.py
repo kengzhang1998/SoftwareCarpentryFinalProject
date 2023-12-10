@@ -7,70 +7,46 @@ The player can customize game settings at the start of the game.
 
 # This is the main file for final project
 
+from deck_model import *
 import random
 import pygame
-class Deck:
-    '''
-    Represents a deck of playing cards for card games.
-    Attributes:
-        cards (list of str): List of cards in the deck.
-    '''
-    def __init__(self):
-        '''
-        Initializes the Deck instance with 208 cards (16 sets of 52 cards each) 
-        and shuffles them.
-        '''
-        self.cards = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"] * 16
-        self.shuffle_deck()
-
-    def shuffle_deck(self):
-        '''
-        Randomly shuffles the cards in the deck.
-        '''
-        random.shuffle(self.cards)
-
-    def deal_card(self):
-        '''
-        Deals the top card from the deck. 
-        If there are less than 52 cards, reshuffles the deck.
-        Returns:
-            str: The top card from the deck.
-        '''
-        if len(self.cards) < 52:
-            self.shuffle_deck()
-        return self.cards.pop()
 
 # Creating 4 decks
 decks = Deck()
 
-# Example of dealing a card
+# Example of dealing 2 cards
 card = decks.deal_card()
-print("Dealt card:", card)
+print("Dealt card:", card.get_value())
 print(len(decks.cards))
 
+card = decks.deal_card()
+print("Dealt card:", card.get_value())
+print(len(decks.cards))
+
+
 class BlackjackGame:
-    '''
+    """
     Manages a game of Blackjack, including players and game settings.
     Attributes:
         player_chips (int): The amount of chips the player starts with.
         num_computer_players (int): Number of computer players in the game.
         ai_difficulty (str): The difficulty level of AI players.
-    '''
+    """
     def __init__(self):
-        '''
+        """
         Initializes a new Blackjack game, setting up player chips, number of computer players,
         and AI difficulty.
-        '''
+        """
         self.player_chips = 500
         self.num_computer_players = self.get_num_computer_players()
         self.ai_difficulty = self.get_ai_difficulty()
 
     def get_num_computer_players(self):
-        '''
+        """
         Prompts the user to input the number of computer players (1-4).
         Returns:
             int: The number of computer players.
-        '''
+        """
         while True:
             try:
                 num_players = int(input("Enter number of computer players (1-4): "))
@@ -82,25 +58,26 @@ class BlackjackGame:
                 print("Invalid input. Please enter a number.")
 
     def get_ai_difficulty(self):
-        '''
+        """
         Asks the user to choose the AI difficulty level.
         Returns:
             str: The chosen AI difficulty ('easy', 'medium', or 'hard').
-        '''
+        """
         difficulty = input("Choose AI difficulty (Easy/Medium/Hard): ").lower()
         if difficulty in ["easy", "medium", "hard"]:
             return difficulty
         else:
             return "medium"
 
+
 def place_bets_and_deal(players, dealer, deck):
-    '''
+    """
     Handles the betting and dealing of cards at the start of each game round.
     Args:
         players (list of Player objects): The list of players in the game.
         dealer (Dealer object): The dealer of the game.
         deck (Deck object): The deck of cards used in the game.
-    '''
+    """
     if len(deck) < 52:
         deck.shuffle()
 
@@ -122,13 +99,13 @@ def place_bets_and_deal(players, dealer, deck):
 
 
 def play_hand(players, dealer, deck):
-    '''
+    """
     Manages the actions of each player during their turn in the game.
     Args:
         players (list of Player objects): The list of players in the game.
         dealer (Dealer object): The dealer of the game.
         deck (Deck object): The deck of cards used in the game.
-    '''
+    """
     for player in players:
         while True:
             action = player.choose_action()
@@ -149,6 +126,7 @@ def play_hand(players, dealer, deck):
     # Dealer's turn
     while dealer.calculate_hand_value() < 17:
         dealer.hand.append(deck.deal_card(face_up=True))
+
 
 def settle_bets(players, dealer):
     '''
@@ -177,17 +155,19 @@ def settle_bets(players, dealer):
             else:
                 player.tie_bet()
 
+
 # Initializing the game
 game = BlackjackGame()
 
 # Constants
-WIDTH, HEIGHT = 500, 500
+WIDTH, HEIGHT = 900, 500
 black = (0, 0, 0)
 white = (255, 255, 255)
 DARK = (100, 100, 100)      # Dark color
 LIGHT = (170, 170, 170)     # Light color
 red = (255, 0, 0)
-#font = pygame.font.SysFont('Times New Roman', 35)
+green = (0, 128, 0)
+# font = pygame.font.SysFont('Times New Roman', 35)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
@@ -200,7 +180,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    screen.fill(white)
+    screen.fill(green)
 
     # Draw buttons for betting options
     pygame.draw.rect(screen, red, [50, 250, 100, 40], 1, 1)
