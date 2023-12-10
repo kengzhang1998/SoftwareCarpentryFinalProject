@@ -181,12 +181,13 @@ def settle_bets(players, dealer):
 game = BlackjackGame()
 
 # Constants
-WIDTH, HEIGHT = 500, 500
+WIDTH, HEIGHT = 900, 500
 black = (0, 0, 0)
 white = (255, 255, 255)
 DARK = (100, 100, 100)      # Dark color
 LIGHT = (170, 170, 170)     # Light color
 red = (255, 0, 0)
+green = (0, 128, 0)
 #font = pygame.font.SysFont('Times New Roman', 35)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -200,7 +201,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    screen.fill(white)
+    screen.fill(green)
 
     # Draw buttons for betting options
     pygame.draw.rect(screen, red, [50, 250, 100, 40], 1, 1)
