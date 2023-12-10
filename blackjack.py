@@ -8,6 +8,7 @@ The player can customize game settings at the start of the game.
 # This is the main file for final project
 
 import random
+import pygame
 class Deck:
     '''
     Represents a deck of playing cards for card games.
@@ -186,7 +187,7 @@ white = (255, 255, 255)
 DARK = (100, 100, 100)      # Dark color
 LIGHT = (170, 170, 170)     # Light color
 red = (255, 0, 0)
-font = pygame.font.SysFont('Times New Roman', 35)
+#font = pygame.font.SysFont('Times New Roman', 35)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
