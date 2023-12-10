@@ -140,7 +140,7 @@ class Hand:
         not_ace = []
         curr_val = 0
         for card in self.cards:
-            if card.get_value() is 'A':
+            if card.get_value() == 'A':
                 ace.append(card)
             else:
                 not_ace.append(card)

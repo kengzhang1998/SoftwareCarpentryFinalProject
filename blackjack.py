@@ -10,8 +10,11 @@ The player can customize game settings at the start of the game.
 from deck_model import *
 import random
 import pygame
+import sys
 
-# Creating 4 decks
+# initializing pygame
+pygame.init()
+# Creating a deck
 decks = Deck()
 
 # Example of dealing 2 cards
@@ -22,6 +25,7 @@ print(len(decks.cards))
 card = decks.deal_card()
 print("Dealt card:", card.get_value())
 print(len(decks.cards))
+
 
 class BlackjackGame:
     """
@@ -68,6 +72,8 @@ class BlackjackGame:
         else:
             return "medium"
 
+    def quit(self):
+        sys.exit()
 
 def place_bets_and_deal(players, dealer, deck):
     """
@@ -159,17 +165,43 @@ def settle_bets(players, dealer):
 game = BlackjackGame()
 
 # Constants
-WIDTH, HEIGHT = 900, 500
+WIDTH, HEIGHT = 1000, 1000
 black = (0, 0, 0)
 white = (255, 255, 255)
 DARK = (100, 100, 100)      # Dark color
 LIGHT = (170, 170, 170)     # Light color
 red = (255, 0, 0)
 green = (0, 128, 0)
-# font = pygame.font.SysFont('Times New Roman', 35)
+button_font = pygame.font.SysFont('arial', 35)
+
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
+
+
+# Button method
+def button(text, x, y, w, h, action=None):
+    """
+    Sets up a display button for player actions
+    :param text:
+    :param x:
+    :param y:
+    :param w:
+    :param h:
+    :param action:
+    :return:
+    """
+    mouse = pygame.mouse.get_pos()
+    click = pygame.mouse.get_pressed()
+    if x + w > mouse[0] > x and y + h > mouse[1] > y:
+        pygame.draw.rect(screen, LIGHT, (x, y, w, h))
+        if click[0] == 1 is not None:
+            action()
+    else:
+        pygame.draw.rect(screen, DARK, (x, y, w, h))
+    display_text = button_font.render(text, True, red)
+    screen.blit(display_text, ((x+(w/2)-30), (y+(h/2))-20))
+
 
 # Variable to determine if the game is running
 running = True
@@ -181,10 +213,11 @@ while running:
             running = False
     screen.fill(green)
 
-    # Draw buttons for betting options
-    pygame.draw.rect(screen, red, [50, 250, 100, 40], 1, 1)
-    pygame.draw.rect(screen, red, [50, 150, 100, 40], 1, 1)
-    pygame.draw.rect(screen, red, [50, 50, 100, 40], 1, 1)
+    button("DEAL", 30, 100, 150, 50)
+    button("HIT", 30, 200, 150, 50)
+    button("STAND", 30, 300, 150, 50)
+    button("DOUBLE", 30, 400, 150, 50)
+    button("QUIT", 30, 500, 150, 50, game.quit)
 
     # Update portion of the screen
     pygame.display.flip()
