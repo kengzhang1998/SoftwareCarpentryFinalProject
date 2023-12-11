@@ -30,6 +30,9 @@ class Card:
     def get_value(self):
         return self.value
 
+    def get_image(self):
+        return self.image
+
 
 class Deck:
     """
@@ -119,7 +122,7 @@ class Hand:
     """
     Represents a player/dealer's current hand
     """
-    def __init__(self, player):
+    def __init__(self, player=None):
         """
         Initializes an instance of a hand
         """
