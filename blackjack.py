@@ -16,17 +16,11 @@ import time
 # initializing pygame
 pygame.init()
 
-clock = pygame.time.Clock()
-
-## The following sections are for debugging purposes
+# The following sections are for debugging purposes
 # Creating a deck
 decks = Deck()
 
 # Example of dealing 2 cards
-card = decks.deal_card()
-print("Dealt card:", card.get_value())
-print(len(decks.cards))
-
 card = decks.deal_card()
 print("Dealt card:", card.get_value())
 print(len(decks.cards))
@@ -83,18 +77,25 @@ class BlackjackGame:
             return "medium"
 
     def deal(self):
-        pass
         hands = []
         dealer_hand = Hand()
         hands.append(dealer_hand)
+        image = pygame.image.load('images/Club2.png').convert()
+        image = pygame.transform.scale(image, (100, 100))
+        screen.blit(image, (200, 450))
         for player in self.players:
             hand = Hand(player)
             hands.append(hand)
-        for hand in hands:
-            card = self.deck.deal_card()
-            hand.add_card(card)
-            print("Dealt card:", card.get_value())
-            screen.blit(card.get_image().convert(), (300, 450))
+        pygame.display.update()
+        #for hand in hands:
+            #card = self.deck.deal_card()
+            #hand.add_card(card)
+            #print("Dealt card:", card.get_value())
+            #image = pygame.image.load('images/' + card.suit + card.value + '.png').convert()
+            #image = pygame.transform.scale(image, (100, 100))
+            #screen.blit(image, (200, 450))
+            #clock.tick(300)
+            #pygame.display.flip()
 
     def bet(self, amount):
         """
@@ -263,10 +264,12 @@ LIGHT = (170, 170, 170)     # Light color
 red = (255, 0, 0)
 green = (0, 128, 0)
 button_font = pygame.font.SysFont('arial', 30)
+timer = pygame.time.Clock()
+fps = 60
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
-
+clock = pygame.time.Clock()
 
 # Button method
 def button(text, x, y, w, h, action=None):
@@ -296,13 +299,14 @@ running = True
 
 # Main game loop for when the game is running
 while running:
+    timer.tick(fps)
+    screen.fill(green)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[0]:
                 game.deal()
-    screen.fill(green)
 
     button("BET", 30, 50, 150, 50, game.bet)
     button("DEAL", 30, 150, 150, 50)
