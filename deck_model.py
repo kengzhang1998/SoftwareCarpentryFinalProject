@@ -83,8 +83,7 @@ class Player:
         """
         self.bought_chips = chips
         self.chips = chips
-        self.wins = 0
-        self.losses = 0
+        self.records = [0, 0, 0]     # Tracks wins/losses/draws
         self.player_id = player_id
 
     def add_chips(self, amount):
@@ -94,17 +93,13 @@ class Player:
         self.bought_chips += amount
         self.chips += amount
 
-    def win(self):
-        """
-        Adds player win count by 1
-        """
-        self.wins += 1
-
-    def lose(self):
-        """
-        Adds player lose count by 1
-        """
-        self.losses += 1
+    def tally(self, condition):
+        if condition == 'win':
+            self.records[0] += 1
+        elif condition == 'loss':
+            self.records[1] += 1
+        elif condition == 'draw':
+            self.records[2] += 1
 
     def display_results(self):
         """
@@ -113,9 +108,12 @@ class Player:
             float: win probability of player
             int: earnings of player
         """
-        win_probability = self.wins/(self.wins + self.losses)
+        win_probability = self.records[0]/(sum(self.records))
         earnings = self.chips - self.bought_chips
         return win_probability, earnings
+
+    def get_records(self):
+        return self.records
 
 
 class Hand:
@@ -129,7 +127,7 @@ class Hand:
         self.cards = []
         self.player = player
         self.value = 0
-        self.blackjack = False
+        self.isblackjack = False
 
     def add_card(self, card):
         """
@@ -184,3 +182,6 @@ class Hand:
         """
         # Needs to be filled
         pass
+
+    def get_hand(self):
+        return self.cards

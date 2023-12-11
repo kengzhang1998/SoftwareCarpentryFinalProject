@@ -16,15 +16,6 @@ import time
 # initializing pygame
 pygame.init()
 
-# The following sections are for debugging purposes
-# Creating a deck
-decks = Deck()
-
-# Example of dealing 2 cards
-card = decks.deal_card()
-print("Dealt card:", card.get_value())
-print(len(decks.cards))
-
 
 class BlackjackGame:
     """
@@ -141,11 +132,11 @@ class BlackjackGame:
         The player receives another card. If the total exceeds 21, they bust.
         """
         # Assuming the first player in the list is the current player
-        current_player = self.players[0]  
+        current_player = self.players[0]
         new_card = self.deck.deal_card()
         current_player.hand.add_card(new_card)
         print(f"Dealt {new_card}. Total hand value now: {current_player.hand.value}")
-        
+
         if current_player.hand.value > 21:
             print("Bust! You've exceeded 21.")
 
@@ -156,7 +147,6 @@ class BlackjackGame:
         The player ends their turn without taking any additional cards.
         """
         print("Stand. No more cards.")
-        
         pass
 
     def quit(self):
@@ -166,8 +156,19 @@ class BlackjackGame:
         sys.exit()
 
 
-def draw_hand(hand):
-    pass
+def display_hand(curr_hand, x, y):
+    """
+
+    :param hand: the given hand to be displayed
+    :param x: starting x-coord of first card
+    :param y: starting y-coord of first card
+    :return:
+    """
+    for index, item in enumerate(curr_hand):
+        image = item.get_image()
+        image = pygame.transform.scale(image, (card_width, card_height))
+        screen.blit(image, (x + index*50, y + index*10))
+
 
 def place_bets_and_deal(players, dealer, deck):
     """
@@ -195,38 +196,6 @@ def place_bets_and_deal(players, dealer, deck):
     for player in players:
         player.hand.append(deck.deal_card(face_up=True))
     dealer.hand.append(deck.deal_card(face_up=False))
-
-
-"""
-def play_hand(players, dealer, deck):
-    """"""
-    Manages the actions of each player during their turn in the game.
-    Args:
-        players (list of Player objects): The list of players in the game.
-        dealer (Dealer object): The dealer of the game.
-        deck (Deck object): The deck of cards used in the game.
-    """"""
-    for player in players:
-        while True:
-            action = player.choose_action()
-            if action == 'hit':
-                player.hand.append(deck.deal_card(face_up=True))
-                if player.calculate_hand_value() > 21:
-                    player.status = 'bust'
-                    break
-            elif action in ['split', 'double', 'stand']:
-                # Implement the logic for split, double, stand
-                break
-
-    # AI players' turns
-    for player in players:
-        if player.is_ai:
-            ai_logic(player)
-
-    # Dealer's turn
-    while dealer.calculate_hand_value() < 17:
-        dealer.hand.append(deck.deal_card(face_up=True))
-"""
 
 
 def settle_bets(player_hands, dealer_hand):
@@ -262,7 +231,7 @@ game = BlackjackGame()
 
 # Constants
 WIDTH, HEIGHT = 1000, 1000
-card_width, card_height = 78, 120
+card_width, card_height = 200, 300
 card_gap = 20
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -270,57 +239,87 @@ DARK = (100, 100, 100)      # Dark color
 LIGHT = (170, 170, 170)     # Light color
 red = (255, 0, 0)
 green = (0, 128, 0)
-button_font = pygame.font.SysFont('arial', 30)
+button_font = pygame.font.SysFont('arial', 45)
+game_font = pygame.font.SysFont('comicsansms', 30)
 timer = pygame.time.Clock()
 fps = 60
+playing = False
+
+dealer_hand = []
+player_hand = []
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
 clock = pygame.time.Clock()
 
-# Button method
-def button(text, x, y, w, h, action=None):
-    """
-    Sets up a display button for player actions
-    :param text: text to be added
-    :param x: start horizontal position of button
-    :param y: start vertical position of button
-    :param w: width of button
-    :param h: height of button
-    :param action: associated action of the button
-    """
-    mouse = pygame.mouse.get_pos()
-    click = pygame.mouse.get_pressed()
-    if x + w > mouse[0] > x and y + h > mouse[1] > y:
-        pygame.draw.rect(screen, LIGHT, (x, y, w, h))
-        if click[0] == 1 != None:
-            action()
-    else:
-        pygame.draw.rect(screen, DARK, (x, y, w, h))
-    display_text = button_font.render(text, True, black)
-    screen.blit(display_text, ((x+(w/2)-50), (y+(h/2))-20))
 
+# Button method
+def make_buttons(playing, player):
+    button_list = []
+    if not playing:
+        deal = pygame.draw.rect(screen, white, [150, 20, 300, 100], 0, 5)
+        pygame.draw.rect(screen, red, [150, 20, 300, 100], 3, 5)
+        deal_text = button_font.render('DEAL', True, black)
+        screen.blit(deal_text, (165, 50))
+        button_list.append(deal)
+    else:
+        hit = pygame.draw.rect(screen, white, [0, 700, 300, 100], 0, 5)
+        pygame.draw.rect(screen, red, [0, 700, 300, 100], 3, 5)
+        hit_text = button_font.render('HIT', True, black)
+        screen.blit(hit_text, (55, 735))
+        button_list.append(hit)
+        stand = pygame.draw.rect(screen, white, [300, 700, 300, 100], 0, 5)
+        pygame.draw.rect(screen, red, [300, 700, 300, 100], 3, 5)
+        stand_text = button_font.render('STAND', True, black)
+        screen.blit(stand_text, (355, 735))
+        button_list.append(stand)
+        records = player.get_records()
+        score_text = game_font.render(f'Wins: {records[0]} Losses: {records[1]} Draws: {records[2]}', True, white)
+        screen.blit(score_text, (15, 840))
+    return button_list
 
 # Variable to determine if the game is running
 running = True
 
+player = Player(500, 0)
+player.tally('win')
+
+
 # Main game loop for when the game is running
+def deal_cards(curr_dealer_hand, curr_player_hand, curr_game):
+    for i in range(2):
+        curr_dealer_hand.append(curr_game.deck.deal_card())
+        curr_player_hand.append(curr_game.deck.deal_card())
+    for item in curr_dealer_hand:
+        print(item.get_value())
+    for item in curr_player_hand:
+        print(item.get_value())
+    print(len(game.deck.cards))
+
+
 while running:
     timer.tick(fps)
     screen.fill(green)
+
+    # Install buttons
+    buttons = make_buttons(playing, player)
+
+    if playing:
+        display_hand(dealer_hand, 100, 350)
+        display_hand(player_hand, 600, 350)
+
+    # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.mouse.get_pressed()[0]:
-                game.deal()
-
-    button("BET", 30, 50, 150, 50, game.bet)
-    button("DEAL", 30, 150, 150, 50)
-    button("HIT", 30, 250, 150, 50, game.hit)
-    button("STAND", 30, 350, 150, 50, game.stand)
-    button("DOUBLE", 30, 450, 150, 50, game.double)
-    button("QUIT", 30, 800, 150, 50, game.quit)
+        if event.type == pygame.MOUSEBUTTONUP:
+            if not playing:
+                if buttons[0].collidepoint(event.pos):
+                    playing = True
+                    dealer_hand = []
+                    player_hand = []
+                    deal_cards(dealer_hand, player_hand, game)
+    # Debug
 
     # Update portion of the screen
     pygame.display.flip()
