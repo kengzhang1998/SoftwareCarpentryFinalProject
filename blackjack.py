@@ -52,6 +52,7 @@ class BlackjackGame:
             self.players.append(player)
         self.ai_difficulty = self.get_ai_difficulty()
         self.deck = Deck()
+        self.player_bet = 0
 
     def get_num_computer_players(self):
         """
@@ -94,6 +95,9 @@ class BlackjackGame:
             hand.add_card(card)
             print("Dealt card:", card.get_value())
             screen.blit(card.get_image().convert(), (300, 450))
+
+    def bet(self, amount):
+        pass
 
     def double(self):
         pass
@@ -249,10 +253,11 @@ while running:
                 game.deal()
     screen.fill(green)
 
-    button("DEAL", 30, 100, 150, 50)
-    button("HIT", 30, 200, 150, 50, game.hit)
-    button("STAND", 30, 300, 150, 50, game.stand)
-    button("DOUBLE", 30, 400, 150, 50, game.double)
+    button("BET", 30, 50, 150, 50, game.bet)
+    button("DEAL", 30, 150, 150, 50)
+    button("HIT", 30, 250, 150, 50, game.hit)
+    button("STAND", 30, 350, 150, 50, game.stand)
+    button("DOUBLE", 30, 450, 150, 50, game.double)
     button("QUIT", 30, 800, 150, 50, game.quit)
 
     # Update portion of the screen
