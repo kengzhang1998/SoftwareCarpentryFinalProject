@@ -135,16 +135,17 @@ class BlackjackGame:
         sys.exit()
 
 
-def display_hand(curr_hand, x, y, isdealer = False):
+def display_hand(curr_hand, x, y, is_dealer=False):
     """
 
     :param curr_hand: the given hand to be displayed
     :param x: starting x-coord of first card
     :param y: starting y-coord of first card
+    :param is_dealer: True if the hand is from the dealer
     :return:
     """
     for index, item in enumerate(curr_hand):
-        if isdealer and index == 1:
+        if is_dealer and index == 1:
             image = pygame.image.load('images/card_back.png')
             image = pygame.transform.scale(image, (card_width, card_height))
             screen.blit(image, (x + index * 50, y + index * 10))
@@ -292,6 +293,32 @@ def make_buttons(playing, player):
         screen.blit(score_text, (15, 840))
     return button_list
 
+
+def calc_hand(curr_hand):
+    """
+    Calculate the value of the current hand
+    """
+    ace = []
+    not_ace = []
+    curr_val = 0
+    for card in curr_hand:
+        if card.get_value() == 'A':
+            ace.append(card)
+        else:
+            not_ace.append(card)
+    for card in not_ace:
+        if card.get_value() in 'JQK':
+            curr_val += 10
+        else:
+            curr_val += int(card.get_value())
+
+    for card in ace:
+        if curr_val <= 10:
+            curr_val += 11
+        else:
+            curr_val += 1
+    return curr_val
+
 # Variable to determine if the game is running
 running = True
 
@@ -316,6 +343,8 @@ while running:
     if playing:
         display_hand(dealer_hand, 100, 350, True)
         display_hand(player_hand, 600, 350)
+        dealer_score = calc_hand(dealer_hand)
+        player_score = calc_hand(player_hand)
 
     # Handle events
     for event in pygame.event.get():
