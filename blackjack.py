@@ -167,7 +167,7 @@ class BlackjackGame:
 
 
 def draw_hand(hand):
-
+    pass
 
 def place_bets_and_deal(players, dealer, deck):
     """
