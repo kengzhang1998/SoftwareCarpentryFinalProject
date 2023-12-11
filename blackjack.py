@@ -256,6 +256,7 @@ red = (255, 0, 0)
 green = (0, 128, 0)
 button_font = pygame.font.SysFont('arial', 45)
 game_font = pygame.font.SysFont('comicsansms', 30)
+text_font = pygame.font.SysFont('times new roman', 30)
 timer = pygame.time.Clock()
 fps = 60
 playing = False
@@ -269,9 +270,9 @@ clock = pygame.time.Clock()
 
 
 # Button method
-def make_buttons(playing, player):
+def make_buttons(playing_status, curr_player):
     button_list = []
-    if not playing:
+    if not playing_status:
         deal = pygame.draw.rect(screen, white, [150, 20, 300, 100], 0, 5)
         pygame.draw.rect(screen, red, [150, 20, 300, 100], 3, 5)
         deal_text = button_font.render('DEAL', True, black)
@@ -288,7 +289,7 @@ def make_buttons(playing, player):
         stand_text = button_font.render('STAND', True, black)
         screen.blit(stand_text, (355, 735))
         button_list.append(stand)
-        records = player.get_records()
+        records = curr_player.get_records()
         score_text = game_font.render(f'Wins: {records[0]} Losses: {records[1]} Draws: {records[2]}', True, white)
         screen.blit(score_text, (15, 840))
     return button_list
@@ -319,6 +320,7 @@ def calc_hand(curr_hand):
             curr_val += 1
     return curr_val
 
+
 # Variable to determine if the game is running
 running = True
 
@@ -333,6 +335,10 @@ def deal_cards(curr_dealer_hand, curr_player_hand, curr_game):
         curr_player_hand.append(curr_game.deck.deal_card())
 
 
+def draw_score(curr_score, x, y, text):
+    screen.blit(text_font.render(f'{text:}[{curr_score}]', True, black), (x, y))
+
+
 while running:
     timer.tick(fps)
     screen.fill(green)
@@ -341,10 +347,11 @@ while running:
     buttons = make_buttons(playing, player)
 
     if playing:
-        display_hand(dealer_hand, 100, 350, True)
-        display_hand(player_hand, 600, 350)
+        display_hand(dealer_hand, 100, 250, True)
+        display_hand(player_hand, 600, 250)
         dealer_score = calc_hand(dealer_hand)
         player_score = calc_hand(player_hand)
+        draw_score(player_score, 600,600, "Player score")
 
     # Handle events
     for event in pygame.event.get():
