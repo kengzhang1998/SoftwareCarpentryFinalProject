@@ -67,27 +67,6 @@ class BlackjackGame:
         else:
             return "medium"
 
-    def deal(self):
-        hands = []
-        dealer_hand = Hand()
-        hands.append(dealer_hand)
-        image = pygame.image.load('images/Club2.png').convert()
-        image = pygame.transform.scale(image, (100, 100))
-        screen.blit(image, (200, 450))
-        for player in self.players:
-            hand = Hand(player)
-            hands.append(hand)
-        pygame.display.update()
-        #for hand in hands:
-            #card = self.deck.deal_card()
-            #hand.add_card(card)
-            #print("Dealt card:", card.get_value())
-            #image = pygame.image.load('images/' + card.suit + card.value + '.png').convert()
-            #image = pygame.transform.scale(image, (100, 100))
-            #screen.blit(image, (200, 450))
-            #clock.tick(300)
-            #pygame.display.flip()
-
     def bet(self, amount):
         """
         Places a bet for the current player.
@@ -156,7 +135,7 @@ class BlackjackGame:
         sys.exit()
 
 
-def display_hand(curr_hand, x, y):
+def display_hand(curr_hand, x, y, isdealer = False):
     """
 
     :param hand: the given hand to be displayed
@@ -290,11 +269,6 @@ def deal_cards(curr_dealer_hand, curr_player_hand, curr_game):
     for i in range(2):
         curr_dealer_hand.append(curr_game.deck.deal_card())
         curr_player_hand.append(curr_game.deck.deal_card())
-    for item in curr_dealer_hand:
-        print(item.get_value())
-    for item in curr_player_hand:
-        print(item.get_value())
-    print(len(game.deck.cards))
 
 
 while running:
