@@ -100,12 +100,15 @@ class BlackjackGame:
         pass
 
     def double(self):
+        # Need to be filled
         pass
 
     def hit(self):
+        # Need to be filled
         pass
 
     def stand(self):
+        # Need to be filled
         pass
 
     def quit(self):
