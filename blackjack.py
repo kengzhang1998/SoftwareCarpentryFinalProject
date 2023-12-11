@@ -97,6 +97,25 @@ class BlackjackGame:
             screen.blit(card.get_image().convert(), (300, 450))
 
     def bet(self, amount):
+        """
+        Places a bet for the current player.
+        Args:
+            amount (int): The amount to bet.
+        """
+        # Get the current player
+        current_player = self.players[0]
+
+        # Check if the player has enough chips
+        if current_player.chips >= amount:
+            # Deduct the bet amount from the player's chips
+            current_player.chips -= amount
+            # Record the bet amount
+            self.player_bet = amount
+            print(f"{current_player.name} has placed a bet of {amount}. Remaining chips: {current_player.chips}")
+        else:
+            # Not enough chips to place the bet
+            print(f"Insufficient chips. You have {current_player.chips}, but tried to bet {amount}.")
+
         pass
 
     def double(self):
