@@ -11,9 +11,12 @@ from deck_model import *
 import random
 import pygame
 import sys
+import time
 
 # initializing pygame
 pygame.init()
+
+clock = pygame.time.Clock()
 
 ## The following sections are for debugging purposes
 # Creating a deck
@@ -34,7 +37,6 @@ class BlackjackGame:
     Manages a game of Blackjack, including players and game settings.
     Attributes:
         players (list of Player objects): The amount of players in the game
-        num_computer_players (int): Number of computer players in the game.
         ai_difficulty (str): The difficulty level of AI players.
         deck (Deck object): The deck in play
     """
@@ -80,9 +82,18 @@ class BlackjackGame:
             return "medium"
 
     def deal(self):
-        for player in self.players:
-            pass
         pass
+        hands = []
+        dealer_hand = Hand()
+        hands.append(dealer_hand)
+        for player in self.players:
+            hand = Hand(player)
+            hands.append(hand)
+        for hand in hands:
+            card = self.deck.deal_card()
+            hand.add_card(card)
+            print("Dealt card:", card.get_value())
+            screen.blit(card.get_image().convert(), (300, 450))
 
     def double(self):
         pass
@@ -233,9 +244,12 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
+                game.deal()
     screen.fill(green)
 
-    button("DEAL", 30, 100, 150, 50, game.deal)
+    button("DEAL", 30, 100, 150, 50)
     button("HIT", 30, 200, 150, 50, game.hit)
     button("STAND", 30, 300, 150, 50, game.stand)
     button("DOUBLE", 30, 400, 150, 50, game.double)
