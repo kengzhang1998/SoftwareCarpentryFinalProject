@@ -199,13 +199,13 @@ def place_bets_and_deal(players, dealer, deck):
 
 """
 def play_hand(players, dealer, deck):
-    """"""
+    """
     Manages the actions of each player during their turn in the game.
     Args:
         players (list of Player objects): The list of players in the game.
         dealer (Dealer object): The dealer of the game.
         deck (Deck object): The deck of cards used in the game.
-    """"""
+    """
     for player in players:
         while True:
             action = player.choose_action()
