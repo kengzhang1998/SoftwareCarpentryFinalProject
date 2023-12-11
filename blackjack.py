@@ -96,12 +96,15 @@ class BlackjackGame:
             screen.blit(card.get_image().convert(), (300, 450))
 
     def double(self):
+        # Need to be filled
         pass
 
     def hit(self):
+        # Need to be filled
         pass
 
     def stand(self):
+        # Need to be filled
         pass
 
     def quit(self):
