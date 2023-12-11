@@ -138,15 +138,20 @@ class BlackjackGame:
 def display_hand(curr_hand, x, y, isdealer = False):
     """
 
-    :param hand: the given hand to be displayed
+    :param curr_hand: the given hand to be displayed
     :param x: starting x-coord of first card
     :param y: starting y-coord of first card
     :return:
     """
     for index, item in enumerate(curr_hand):
-        image = item.get_image()
-        image = pygame.transform.scale(image, (card_width, card_height))
-        screen.blit(image, (x + index*50, y + index*10))
+        if isdealer and index == 1:
+            image = pygame.image.load('images/card_back.png')
+            image = pygame.transform.scale(image, (card_width, card_height))
+            screen.blit(image, (x + index * 50, y + index * 10))
+        else:
+            image = item.get_image()
+            image = pygame.transform.scale(image, (card_width, card_height))
+            screen.blit(image, (x + index * 50, y + index * 10))
 
 
 def place_bets_and_deal(players, dealer, deck):
@@ -309,7 +314,7 @@ while running:
     buttons = make_buttons(playing, player)
 
     if playing:
-        display_hand(dealer_hand, 100, 350)
+        display_hand(dealer_hand, 100, 350, True)
         display_hand(player_hand, 600, 350)
 
     # Handle events
