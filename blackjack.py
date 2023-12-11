@@ -80,15 +80,22 @@ class BlackjackGame:
         hands = []
         dealer_hand = Hand()
         hands.append(dealer_hand)
+        image = pygame.image.load('images/Club2.png').convert()
+        image = pygame.transform.scale(image, (100, 100))
+        screen.blit(image, (200, 450))
         for player in self.players:
             hand = Hand(player)
             hands.append(hand)
-        for hand in hands:
-            card = self.deck.deal_card()
-            hand.add_card(card)
-            print("Dealt card:", card.get_value())
-            image = pygame.image.load('images/' + card.suit + card.value + '.png').convert()
-            screen.blit(image, (200, 450))
+        pygame.display.update()
+        #for hand in hands:
+            #card = self.deck.deal_card()
+            #hand.add_card(card)
+            #print("Dealt card:", card.get_value())
+            #image = pygame.image.load('images/' + card.suit + card.value + '.png').convert()
+            #image = pygame.transform.scale(image, (100, 100))
+            #screen.blit(image, (200, 450))
+            #clock.tick(300)
+            #pygame.display.flip()
 
     def bet(self, amount):
         """
@@ -234,7 +241,7 @@ fps = 60
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
-
+clock = pygame.time.Clock()
 
 # Button method
 def button(text, x, y, w, h, action=None):
