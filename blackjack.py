@@ -122,7 +122,8 @@ class BlackjackGame:
         """
         The player doubles their bet, receives one more card, and then stands.
         """
-        current_player = self.players[0]  # Assuming the first player in the list is the current player
+        # Assuming the first player in the list is the current player
+        current_player = self.players[0]  
         if current_player.chips >= self.player_bet:
             current_player.chips -= self.player_bet
             self.player_bet *= 2
@@ -138,14 +139,15 @@ class BlackjackGame:
         """
         The player receives another card. If the total exceeds 21, they bust.
         """
-        current_player = self.players[0]  # Assuming the first player in the list is the current player
+        # Assuming the first player in the list is the current player
+        current_player = self.players[0]  
         new_card = self.deck.deal_card()
         current_player.hand.add_card(new_card)
         print(f"Dealt {new_card}. Total hand value now: {current_player.hand.value}")
         
         if current_player.hand.value > 21:
             print("Bust! You've exceeded 21.")
-            # Handle bust scenario
+
         pass
 
     def stand(self):
@@ -153,6 +155,7 @@ class BlackjackGame:
         The player ends their turn without taking any additional cards.
         """
         print("Stand. No more cards.")
+        
         pass
 
     def quit(self):
