@@ -221,24 +221,24 @@ def settle_bets(player_hands, dealer_hand):
         dealer_hand (Hand object): The hand of dealer this round.
     """
     dealer_value = dealer_hand.calc_hand()
-    for player_hand in player_hands:
-        player_value = player_hand.calc_hand()
-        if player_hand.value > 21:
-            player_hand.lose_bet()
-        elif player_hand.get_blackjack:  # Blackjack
-            player_hand.win_bet(1.5)
+    for curr_hand in player_hands:
+        player_value = curr_hand.calc_hand()
+        if curr_hand.value > 21:
+            curr_hand.lose_bet()
+        elif curr_hand.get_blackjack:  # Blackjack
+            curr_hand.win_bet(1.5)
         elif dealer_hand.get_blackjack:  # Dealer Blackjack
-            if player_hand.get_blackjack is False:
-                player_hand.lose_bet()
+            if curr_hand.get_blackjack is False:
+                curr_hand.lose_bet()
             else:
-                player_hand.tie_bet()
+                curr_hand.tie_bet()
         else:
             if player_value > dealer_value or dealer_value > 21:
-                player_hand.win_bet()
+                curr_hand.win_bet()
             elif player_value < dealer_value:
-                player_hand.lose_bet()
+                curr_hand.lose_bet()
             else:
-                player_hand.tie_bet()
+                curr_hand.tie_bet()
 
 
 # Initializing the game
@@ -324,6 +324,10 @@ def calc_hand(curr_hand):
     return curr_val
 
 
+def display_text(text, x, y):
+    screen.blit(text_font.render(text, True, black), (x, y))
+
+
 # Variable to determine if the game is running
 running = True
 
@@ -350,9 +354,17 @@ while running:
     buttons = make_buttons(playing, player)
 
     if playing:
-        display_hand(dealer_hand, 100, 250, True)
+        display_text("Dealer's  hand", 100, 100)
+        display_text("Player's hand", 600, 100)
         display_hand(player_hand, 600, 250)
         dealer_score = calc_hand(dealer_hand)
+        if not can_act:
+            if dealer_score < 17:
+                dealer_hand.append(game.deck.deal_card())
+            display_hand(dealer_hand, 100, 250)
+            draw_score(dealer_score, 100, 600, "Dealer score")
+        else:
+            display_hand(dealer_hand, 100, 250, True)
         player_score = calc_hand(player_hand)
         draw_score(player_score, 600,600, "Player score")
 
@@ -374,6 +386,8 @@ while running:
                 elif buttons[1].collidepoint(event.pos):
                     can_act = False
     # Debug
+    if can_act and player_score >= 21:
+        can_act = False
 
     # Update portion of the screen
     pygame.display.flip()
