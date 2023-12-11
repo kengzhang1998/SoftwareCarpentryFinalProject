@@ -259,10 +259,13 @@ game_font = pygame.font.SysFont('comicsansms', 30)
 text_font = pygame.font.SysFont('times new roman', 30)
 timer = pygame.time.Clock()
 fps = 60
-playing = False
+playing = False           # Tracks if the round is active
+can_act = False           # Tracks if the player can take actions
 
 dealer_hand = []
 player_hand = []
+player_score = 0
+dealer_score = 0
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
@@ -364,6 +367,12 @@ while running:
                     dealer_hand = []
                     player_hand = []
                     deal_cards(dealer_hand, player_hand, game)
+                    can_act = True
+            else:
+                if buttons[0].collidepoint(event.pos) and player_score < 21 and can_act:
+                    player_hand.append(game.deck.deal_card())
+                elif buttons[1].collidepoint(event.pos):
+                    can_act = False
     # Debug
 
     # Update portion of the screen
