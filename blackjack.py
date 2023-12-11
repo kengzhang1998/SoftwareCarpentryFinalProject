@@ -117,6 +117,7 @@ class BlackjackGame:
         """
         sys.exit()
 
+
 def place_bets_and_deal(players, dealer, deck):
     """
     Handles the betting and dealing of cards at the start of each game round.
