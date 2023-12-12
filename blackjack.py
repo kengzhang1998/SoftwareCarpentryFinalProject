@@ -228,7 +228,7 @@ def is_black_jack(curr_hand):
     return False
 
 
-def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet, status):
+def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
     """
     Settles bets at the end of each round based on the hand of player vs dealer
     Args:
@@ -260,9 +260,8 @@ def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet, statu
         else:  # Dealer and player has same value
             new_bet = curr_bet
             condition = 'draw'
-    if status:
-        curr_player.tally(condition)
-        curr_player.settle(new_bet)
+    curr_player.tally(condition)
+    curr_player.settle(new_bet)
 
 
 # Initializing the game
@@ -287,6 +286,7 @@ playing = False           # Tracks if the round is active
 can_act = False           # Tracks if the player can take actions
 end_game = False          # Tracks if the end game is reached
 scoring = False           # Tracks if scoring can happen
+new_game = False          # Allows for a new game
 
 # Initialize variables that update/reset each round
 dealer_hand = []
@@ -420,9 +420,10 @@ while running:
     if can_act and player_score >= 21:
         can_act = False
 
-    if end_game:
-        settle_bets(player_hand, dealer_hand, player, 10, end_game)
-        end_game = False
+    if end_game and scoring is False:
+        settle_bets(player_hand, dealer_hand, player, 10)
+        scoring = True
+
 
     # Update portion of the screen
     pygame.display.flip()
