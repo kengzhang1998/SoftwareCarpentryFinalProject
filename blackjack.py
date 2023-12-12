@@ -5,7 +5,7 @@ with a hand as close to but not exceeding 21 as possible.
 The player can customize game settings at the start of the game.
 """
 
-# This is the main file for final project
+# This is the main file for the final project
 
 from deck_model import *
 import random
@@ -24,6 +24,14 @@ class BlackjackGame:
         players (list of Player objects): The amount of players in the game
         ai_difficulty (str): The difficulty level of AI players.
         deck (Deck object): The deck in play
+    Methods:
+        get_num_computer_players: Prompts the user for the number of AI players.
+        get_ai_difficulty: Prompts the user to select the difficulty level for AI players.
+        bet: Allows the player to place a bet.
+        double: Allows the player to double their bet, with additional game rules.
+        hit: Deals an additional card to the player and checks for bust.
+        stand: Concludes the player's turn without drawing any additional cards.
+        quit: Exits the game.
     """
     def __init__(self):
         """
@@ -137,13 +145,17 @@ class BlackjackGame:
 
 def display_hand(curr_hand, x, y, is_dealer=False):
     """
-
     :param curr_hand: the given hand to be displayed
     :param x: starting x-coord of first card
     :param y: starting y-coord of first card
     :param is_dealer: True if the hand is from the dealer
     :return:
+
+    The function iterates through the cards in the hand and displays them in a row,
+    with a slight offset for each card for better visual appearance. If the hand belongs
+    to the dealer and it is their first turn, one card is displayed face down.
     """
+    
     for index, item in enumerate(curr_hand):
         if is_dealer and index == 1:
             image = pygame.image.load('images/card_back.png')
@@ -214,6 +226,13 @@ def play_hand(players, dealer, deck):
 
 
 def is_black_jack(curr_hand):
+    """
+    Determines if a hand is a blackjack.
+    Args:
+        curr_hand (list of Card objects): The hand to check.
+    Returns:
+        bool: True if the hand is a blackjack, False otherwise.
+    """
     ace = []
     not_ace = []
     for card in curr_hand:
