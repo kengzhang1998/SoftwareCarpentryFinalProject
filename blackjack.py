@@ -231,12 +231,12 @@ def make_buttons(betting_status, playing_status, curr_player, new_game_status):
     """
     button_list = []
     if betting_status:
-        bet = make_button(550, 20, 300, 100, 'BET')
+        bet = make_button(550, 50, 300, 100, 'BET')
         button_list.append(bet)
         add_chips = make_button(150, 700, 300, 100, 'ADD CHIPS')
         button_list.append(add_chips)
     if not playing_status:
-        deal = make_button(150, 20, 300, 100, 'DEAL')
+        deal = make_button(150, 50, 300, 100, 'DEAL')
         button_list.append(deal)
     else:
         # Implement hit button
@@ -253,7 +253,7 @@ def make_buttons(betting_status, playing_status, curr_player, new_game_status):
         score_text = game_font.render(f'Wins: {records[0]} Losses: {records[1]} Draws: {records[2]}', True, white)
         screen.blit(score_text, (15, 840))
     if new_game_status:
-        next_game = make_button(300, 100, 300, 100, 'NEW GAME')
+        next_game = make_button(350, 50, 300, 100, 'NEW GAME')
         button_list.append(next_game)
     return button_list
 
@@ -341,8 +341,8 @@ while running:
 
     # If a new round is started
     if playing:
-        display_text("Dealer's hand", 100, 100)
-        display_text("Player's hand", 600, 100)
+        display_text("Dealer's hand", 150, 100)
+        display_text("Player's hand", 650, 100)
         display_hand(player_hand, 600, 200)
         dealer_score = calc_hand(dealer_hand)
         if not can_act:       # Player turn finishes
@@ -351,11 +351,11 @@ while running:
             else:
                 end_game = True       # Ready to be settled
             display_hand(dealer_hand, 100, 200)     # Reviews dealer's hidden card
-            draw_score(dealer_score, 100, 600, "Dealer score")
+            draw_score(dealer_score, 150, 600, "Dealer score")
         else:         # Display dealer's hidden card
             display_hand(dealer_hand, 100, 200, True)
         player_score = calc_hand(player_hand)
-        draw_score(player_score, 600, 600, "Player score")
+        draw_score(player_score, 650, 600, "Player score")
 
     # User is entering bet amount
     if input_active:
@@ -363,7 +363,7 @@ while running:
 
     # Display warning message
     if warning_status >= 0:
-        display_text(warning_texts[warning_status], 100, 200)
+        display_text(warning_texts[warning_status], 100, 150)
 
     # Handle events
     for event in pygame.event.get():
