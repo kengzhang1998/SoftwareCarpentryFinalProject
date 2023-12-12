@@ -63,7 +63,7 @@ def is_black_jack(curr_hand):
     Args:
         curr_hand (list): Hand to check.
     Returns:
-        bool: True if blackjack, False otherwise.
+        bool: True if blackjacked, False otherwise.
     """
     ace = []
     not_ace = []
@@ -151,6 +151,7 @@ warning_texts = ["You don't have enough chips to place this bet!",
                  "Please make a bet before beginning round!",
                  "You don't have enough chips to double your bet",
                  "Please only add chips when your remaining chips is less than 500"]
+results = False           # Display game summary when user clicks 'Summary'
 
 # Initialize variables that update/reset each round
 dealer_hand = []
@@ -173,7 +174,7 @@ def make_button(x, y, w, h, curr_text):
 
 
 # Button method
-def make_buttons(betting_status, playing_status, curr_player, new_game_status):
+def make_buttons(betting_status, playing_status, curr_player, new_game_status, end_game_status):
     """
     Creates interactive buttons based on game status.
     Args:
@@ -184,6 +185,8 @@ def make_buttons(betting_status, playing_status, curr_player, new_game_status):
     Returns:
         list: Interactive buttons for game actions.
     """
+    if end_game_status:
+        return
     button_list = []
     if betting_status:
         bet = make_button(550, 50, 300, 100, 'BET')
@@ -210,6 +213,8 @@ def make_buttons(betting_status, playing_status, curr_player, new_game_status):
     if new_game_status:
         next_game = make_button(350, 50, 300, 100, 'NEW GAME')
         button_list.append(next_game)
+    summary = make_button(550, 850, 300, 100, 'Summary')
+    button_list.append(summary)
     return button_list
 
 
@@ -283,6 +288,10 @@ def draw_score(curr_score, x, y, text):
     screen.blit(text_font.render(f'{text} [{curr_score}]', True, black), (x, y))
 
 
+def display_results():
+    pass
+
+
 while running:
     # Set game frame rate
     timer.tick(fps)
@@ -291,8 +300,12 @@ while running:
     screen.fill(green)
 
     # Install buttons
-    buttons = make_buttons(betting, playing, player, new_game)
-    display_text(f'Available chips: {player.chips}', 100, 900)
+    buttons = make_buttons(betting, playing, player, new_game, results)
+    if betting or playing:
+        display_text(f'Available chips: {player.chips}', 100, 900)
+
+    if results:
+        display_results()
 
     # If a new round is started
     if playing:
@@ -325,6 +338,15 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONUP:
+            if buttons[-1].collidepoint(event.pos):
+                results = True
+                playing = False
+                dealer_hand = []
+                player_hand = []
+                can_act = False
+                betting = False
+                end_game = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
             if betting:
                 if buttons[2].collidepoint(event.pos):
                     warning_status = 1
@@ -364,7 +386,7 @@ while running:
                         can_act = False
                     else:
                         warning_status = 2
-                elif len(buttons) == 4:
+                elif len(buttons) == 5:
                     if buttons[3].collidepoint(event.pos):
                         scoring = False
                         new_game = False
