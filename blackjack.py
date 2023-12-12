@@ -16,27 +16,27 @@ import time
 # initializing pygame
 pygame.init()
 
-
 class BlackjackGame:
     """
-    Manages a game of Blackjack, including players and game settings.
+    Manages a game of Blackjack, including players 
+    and game settings.
     Attributes:
-        players (list of Player objects): The amount of players in the game
-        ai_difficulty (str): The difficulty level of AI players.
-        deck (Deck object): The deck in play
+        players (list): Players in the game, including AI.
+        ai_difficulty (str): AI difficulty level.
+        deck (Deck): Current deck of cards.
     Methods:
-        get_num_computer_players: Prompts the user for the number of AI players.
-        get_ai_difficulty: Prompts the user to select the difficulty level for AI players.
-        bet: Allows the player to place a bet.
-        double: Allows the player to double their bet, with additional game rules.
-        hit: Deals an additional card to the player and checks for bust.
-        stand: Concludes the player's turn without drawing any additional cards.
+        get_num_computer_players: Gets AI player count.
+        get_ai_difficulty: Selects AI difficulty level.
+        bet: Player places a bet.
+        double: Doubles player's bet and ends turn.
+        hit: Adds card to player's hand, checks for bust.
+        stand: Ends player's turn.
         quit: Exits the game.
     """
     def __init__(self):
         """
-        Initializes a new Blackjack game, setting up player chips, number of computer players,
-        and AI difficulty.
+        Sets up game with initial player chips, 
+        AI players, and difficulty.
         """
         self.players = []
         num_computer_players = self.get_num_computer_players()
@@ -49,7 +49,8 @@ class BlackjackGame:
 
     def get_num_computer_players(self):
         """
-        Prompts the user to input the number of computer players (1-4).
+        Prompts the user to input the number 
+        of computer players (1-4).
         Returns:
             int: The number of computer players.
         """
@@ -151,9 +152,8 @@ def display_hand(curr_hand, x, y, is_dealer=False):
     :param is_dealer: True if the hand is from the dealer
     :return:
 
-    The function iterates through the cards in the hand and displays them in a row,
-    with a slight offset for each card for better visual appearance. If the hand belongs
-    to the dealer and it is their first turn, one card is displayed face down.
+    Displays a hand of cards at specified coordinates.
+    For the dealer's first turn, shows one card face down.
     """
     
     for index, item in enumerate(curr_hand):
@@ -171,9 +171,9 @@ def place_bets_and_deal(players, dealer, deck):
     """
     Handles the betting and dealing of cards at the start of each game round.
     Args:
-        players (list of Player objects): The list of players in the game.
-        dealer (Dealer object): The dealer of the game.
-        deck (Deck object): The deck of cards used in the game.
+        players (list): Players in the game.
+        dealer (object): Dealer of the game.
+        deck (object): Deck of cards.
     """
     if len(deck) < 52:
         deck.shuffle()
@@ -197,11 +197,11 @@ def place_bets_and_deal(players, dealer, deck):
 
 def is_black_jack(curr_hand):
     """
-    Determines if a hand is a blackjack.
+    Checks if a hand is a blackjack.
     Args:
-        curr_hand (list of Card objects): The hand to check.
+        curr_hand (list): Hand to check.
     Returns:
-        bool: True if the hand is a blackjack, False otherwise.
+        bool: True if blackjack, False otherwise.
     """
     ace = []
     not_ace = []
@@ -219,12 +219,12 @@ def is_black_jack(curr_hand):
 
 def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
     """
-    Settles bets at the end of each round based on the hand of player vs dealer
+    Settles bets based on player and dealer hands.
     Args:
-        curr_bet:
-        curr_player:
-        curr_player_hand (list of cards): The hand of player this round.
-        curr_dealer_hand (list of cards): The hand of dealer this round.
+        curr_player_hand, 
+        curr_dealer_hand (list): Player and dealer hands.
+        curr_player (object): Current player.
+        curr_bet (int): Current bet amount.
     """
     dealer_value = calc_hand(curr_dealer_hand)
     player_value = calc_hand(curr_player_hand)
@@ -292,6 +292,14 @@ clock = pygame.time.Clock()
 
 # Button method
 def make_buttons(playing_status, curr_player, new_game_status):
+    """
+    Creates interactive buttons based on game status.
+    Args:
+        playing_status, new_game_status (bool): Current game statuses.
+        curr_player (object): Current player.
+    Returns:
+        list: Interactive buttons for game actions.
+    """
     button_list = []
     if not playing_status:
         deal = pygame.draw.rect(screen, white, [150, 20, 300, 100], 0, 5)
@@ -324,7 +332,11 @@ def make_buttons(playing_status, curr_player, new_game_status):
 
 def calc_hand(curr_hand):
     """
-    Calculate the value of the current hand
+    Calculates total value of a hand.
+    Args:
+        curr_hand (list): Hand to calculate.
+    Returns:
+        int: Total hand value.
     """
     ace = []
     not_ace = []
@@ -349,6 +361,9 @@ def calc_hand(curr_hand):
 
 
 def display_text(text, x, y):
+    """
+    Displays text at specified coordinates on the screen.
+    """
     screen.blit(text_font.render(text, True, black), (x, y))
 
 
