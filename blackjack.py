@@ -13,25 +13,6 @@ import pygame
 pygame.init()
 
 
-class BlackjackGame:
-    """
-    Manages a game of Blackjack, including players
-    and game settings.
-    Attributes:
-        players (list): Players in the game, including AI.
-        ai_difficulty (str): AI difficulty level.
-        deck (Deck): Current deck of cards.
-    Methods:
-        get_num_computer_players: Gets AI player count.
-        get_ai_difficulty: Selects AI difficulty level.
-        bet: Player places a bet.
-        double: Doubles player's bet and ends turn.
-        hit: Adds card to player's hand, checks for bust.
-        stand: Ends player's turn without adding new cards.
-        quit: Exits the game.
-    """
-
-
 def display_hand(curr_hand, x, y, is_dealer=False):
     """
     :param curr_hand: the given hand to be displayed
@@ -121,9 +102,6 @@ def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
     curr_player.settle(new_bet)
     return True, message
 
-
-# Initializing the game
-game = BlackjackGame()
 
 # Constants
 WIDTH, HEIGHT = 1000, 1000
