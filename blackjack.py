@@ -421,6 +421,9 @@ while running:
                         playing = False
                         dealer_hand = []
                         player_hand = []
+                        can_act = True
+                        player_score = 0
+                        dealer_score = 0
     # If player has reached 21 after hitting
     if can_act and player_score >= 21:
         can_act = False
