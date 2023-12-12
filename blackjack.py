@@ -17,7 +17,7 @@ pygame.init()
 
 class BlackjackGame:
     """
-    Manages a game of Blackjack, including players 
+    Manages a game of Blackjack, including players
     and game settings.
     Attributes:
         players (list): Players in the game, including AI.
@@ -408,7 +408,7 @@ while running:
                         betting = True
         if event.type == pygame.KEYDOWN:
             if input_active:
-                if event.key == pygame.K_RETURN:
+                if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                     round_bet = int(user_text)
                     if can_bet(player.chips, round_bet):
                         betting = False
