@@ -2,7 +2,7 @@
 ## Section 1 Initializing deck
 1. Creating 4 decks with 52 cards
 2. Randomly shuffle decks in the beginning
-3. Keep track of dealt cards, reshuffle when remaining card < 52
+3. Keep track of dealt cards, reshuffle when remaining card < 0
 ## Section 2 Initializing game
 1. At the beginning of the game, ask player for # of computer players (5 player max)
 2. Assign player 500 chips
