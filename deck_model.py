@@ -114,3 +114,9 @@ class Player:
 
     def get_records(self):
         return self.records
+
+    def settle(self, bet):
+        self.chips += bet
+
+    def bet(self, amount):
+        self.chips -= amount
