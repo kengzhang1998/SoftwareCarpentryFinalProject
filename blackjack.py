@@ -277,7 +277,7 @@ can_act = False           # Tracks if the player can take actions
 end_game = False          # Tracks if the end game is reached
 scoring = False           # Tracks if scoring can happen
 new_game = False          # Allows for a new game
-betting = True           # Tracks if the user is in betting stage or not
+betting = True            # Tracks if the user is in betting stage or not
 input_active = False      # Allows user to enter bet amount if active
 user_text = ''            # User input into betting text inbox
 round_bet = 0             # User betting amount
@@ -318,16 +318,25 @@ def make_buttons(betting_status, playing_status, curr_player, new_game_status):
         screen.blit(deal_text, (165, 50))
         button_list.append(deal)
     else:
+        # Implement hit button
         hit = pygame.draw.rect(screen, white, [0, 700, 300, 100], 0, 5)
         pygame.draw.rect(screen, red, [0, 700, 300, 100], 3, 5)
         hit_text = button_font.render('HIT', True, black)
         screen.blit(hit_text, (55, 735))
         button_list.append(hit)
+        # Implement stand button
         stand = pygame.draw.rect(screen, white, [300, 700, 300, 100], 0, 5)
         pygame.draw.rect(screen, red, [300, 700, 300, 100], 3, 5)
         stand_text = button_font.render('STAND', True, black)
         screen.blit(stand_text, (355, 735))
         button_list.append(stand)
+        # Implement Double button
+        double = pygame.draw.rect(screen, white, [600, 700, 300, 100], 0, 5)
+        pygame.draw.rect(screen, red, [600, 700, 300, 100], 3, 5)
+        double_text = button_font.render('DOUBLE', True, black)
+        screen.blit(double_text, (655, 735))
+        button_list.append(double)
+        # Display records
         records = curr_player.get_records()
         score_text = game_font.render(f'Wins: {records[0]} Losses: {records[1]} Draws: {records[2]}', True, white)
         screen.blit(score_text, (15, 840))
@@ -447,8 +456,13 @@ while running:
                     player_hand.append(game.deck.deal_card())
                 elif buttons[1].collidepoint(event.pos):
                     can_act = False
-                elif len(buttons) == 3:
-                    if buttons[2].collidepoint(event.pos):
+                elif buttons[2].collidepoint(event.pos) and player_score < 21 and can_act and len(player_hand) == 2:
+                    player_hand.append(game.deck.deal_card())
+                    player.bet(round_bet)
+                    round_bet = round_bet * 2
+                    can_act = False
+                elif len(buttons) == 4:
+                    if buttons[3].collidepoint(event.pos):
                         scoring = False
                         new_game = False
                         end_game = False
