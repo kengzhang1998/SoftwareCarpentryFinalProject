@@ -32,54 +32,6 @@ class BlackjackGame:
         stand: Ends player's turn.
         quit: Exits the game.
     """
-    def __init__(self):
-        """
-        Sets up game with initial player chips, 
-        AI players, and difficulty.
-        """
-        self.players = []
-        num_computer_players = self.get_num_computer_players()
-        for i in range(num_computer_players + 1):
-            player = Player(500, i)
-            self.players.append(player)
-        self.ai_difficulty = self.get_ai_difficulty()
-        self.deck = Deck()
-        self.player_bet = 0
-
-    def get_num_computer_players(self):
-        """
-        Prompts the user to input the number 
-        of computer players (1-4).
-        Returns:
-            int: The number of computer players.
-        """
-        while True:
-            try:
-                num_players = int(input("Enter number of computer players (1-4): "))
-                if 1 <= num_players <= 4:
-                    return num_players
-                else:
-                    print("Invalid number. Please enter a number between 1 and 4.")
-            except ValueError:
-                print("Invalid input. Please enter a number.")
-
-    def get_ai_difficulty(self):
-        """
-        Asks the user to choose the AI difficulty level.
-        Returns:
-            str: The chosen AI difficulty ('easy', 'medium', or 'hard').
-        """
-        difficulty = input("Choose AI difficulty (Easy/Medium/Hard): ").lower()
-        if difficulty in ["easy", "medium", "hard"]:
-            return difficulty
-        else:
-            return "medium"
-
-    def quit(self):
-        """
-        Quits the game if user decides to press the quit button
-        """
-        sys.exit()
 
 
 def display_hand(curr_hand, x, y, is_dealer=False):
@@ -184,6 +136,7 @@ timer = pygame.time.Clock()
 fps = 60
 
 # Game variables
+deck = Deck()
 playing = False           # Tracks if the round is active
 can_act = False           # Tracks if the player can take actions
 end_game = False          # Tracks if the end game is reached
@@ -224,7 +177,9 @@ def make_buttons(betting_status, playing_status, curr_player, new_game_status):
     """
     Creates interactive buttons based on game status.
     Args:
-        playing_status, new_game_status (bool): Current game statuses.
+        betting_status (bool): whether betting is in session
+        playing_status (bool): whether round has started
+        new_game_status (bool): whether new game is being called
         curr_player (object): Current player.
     Returns:
         list: Interactive buttons for game actions.
@@ -318,10 +273,10 @@ player = Player(500, 0)
 
 
 # Main game loop for when the game is running
-def deal_cards(curr_dealer_hand, curr_player_hand, curr_game):
+def deal_cards(curr_dealer_hand, curr_player_hand, curr_deck):
     for i in range(2):
-        curr_dealer_hand.append(curr_game.deck.deal_card())
-        curr_player_hand.append(curr_game.deck.deal_card())
+        curr_dealer_hand.append(curr_deck.deal_card())
+        curr_player_hand.append(curr_deck.deal_card())
 
 
 def draw_score(curr_score, x, y, text):
@@ -347,7 +302,7 @@ while running:
         dealer_score = calc_hand(dealer_hand)
         if not can_act:       # Player turn finishes
             if dealer_score < 17:       # Dealer hits when value is < 17
-                dealer_hand.append(game.deck.deal_card())
+                dealer_hand.append(deck.deal_card())
             else:
                 end_game = True       # Ready to be settled
             display_hand(dealer_hand, 100, 200)     # Reviews dealer's hidden card
@@ -391,19 +346,19 @@ while running:
                     playing = True
                     dealer_hand = []
                     player_hand = []
-                    deal_cards(dealer_hand, player_hand, game)
+                    deal_cards(dealer_hand, player_hand, deck)
                     can_act = True
                     scoring = False
             else:
                 if buttons[0].collidepoint(event.pos) and player_score < 21 and can_act:
                     warning_status = -1
-                    player_hand.append(game.deck.deal_card())
+                    player_hand.append(deck.deal_card())
                 elif buttons[1].collidepoint(event.pos):
                     warning_status = -1
                     can_act = False
                 elif buttons[2].collidepoint(event.pos) and player_score < 21 and can_act and len(player_hand) == 2:
                     if can_bet(player.chips, round_bet):
-                        player_hand.append(game.deck.deal_card())
+                        player_hand.append(deck.deal_card())
                         player.bet(round_bet)
                         round_bet = round_bet * 2
                         can_act = False
