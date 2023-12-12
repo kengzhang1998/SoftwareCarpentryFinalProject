@@ -25,13 +25,20 @@ class Card:
     
     # Initializes a new card with the specified suit and value.
     def __init__(self, suit, value):
+        """
+        Initializes a new card instance with the specified suit and value.
+
+        Args:
+            suit (str): The suit of the card.
+            value (str): The face value of the card.
+        """
         # The suit of the card.
         self.suit = suit
         # The value of the card.
         self.value = value
         self.image = pygame.image.load('images/' + self.suit + self.value + '.png')
     
-    # Returns the value of the card.
+    # Returns the face value of the card.
     def get_value(self):
         return self.value
         
@@ -114,6 +121,9 @@ class Player:
     def __init__(self, chips, player_id):
         """
         Initialize an instance of a player and their stats
+        Args:
+            chips (int): The initial number of chips the player has.
+            player_id (int): The unique identifier for the player.
         """
         self.bought_chips = chips
         self.chips = chips
@@ -123,6 +133,8 @@ class Player:
     def add_chips(self, amount):
         """
         Adds a specified amount of chips to the player's current stash.
+        Args:
+            amount (int): The number of chips to add.
         """
         self.bought_chips += amount
         self.chips += amount
@@ -130,6 +142,8 @@ class Player:
     def tally(self, condition):
         """
         Updates the player's win, loss, or draw record based on the game's outcome.
+        Args:
+            condition (str): The outcome of the game ('win', 'loss', 'draw').
         """
         if condition == 'win':
             self.records[0] += 1
@@ -162,11 +176,15 @@ class Player:
     def settle(self, bet):
         """
         Adjusts the player's chips based on the outcome of a bet.
+        Args:
+            bet (int): The amount to adjust the player's chips by.
         """
         self.chips += bet
 
     def bet(self, amount):
         """
         Places a bet by deducting a specified amount from the player's chips.
+        Args:
+            amount (int): The bet amount.
         """
         self.chips -= amount
