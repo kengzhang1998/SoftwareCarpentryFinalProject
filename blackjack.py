@@ -280,6 +280,7 @@ new_game = False          # Allows for a new game
 betting = True           # Tracks if the user is in betting stage or not
 input_active = False      # Allows user to enter bet amount if active
 user_text = ''            # User input into betting text inbox
+round_bet = 0             # User betting amount
 
 # Initialize variables that update/reset each round
 dealer_hand = []
@@ -418,7 +419,7 @@ while running:
         else:         # Display dealer's hidden card
             display_hand(dealer_hand, 100, 250, True)
         player_score = calc_hand(player_hand)
-        draw_score(player_score, 600,600, "Player score")
+        draw_score(player_score, 600, 600, "Player score")
 
     if betting:
         display_text(user_text, 900, 900)
@@ -462,8 +463,10 @@ while running:
             if input_active:
                 if event.key == pygame.K_RETURN:
                     print(user_text)
-                    user_text = ''
                     betting = False
+                    round_bet = int(user_text)
+                    player.bet(round_bet)
+                    user_text = ''
                 elif event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                 else:
@@ -473,7 +476,7 @@ while running:
         can_act = False
 
     if end_game and scoring is False:
-        new_game = settle_bets(player_hand, dealer_hand, player, 10)
+        new_game = settle_bets(player_hand, dealer_hand, player, round_bet)
         scoring = True
 
     # Update portion of the screen
