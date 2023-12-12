@@ -306,6 +306,8 @@ while running:
 
     # Install buttons
     buttons = make_buttons(betting, playing, player, new_game, results)
+
+    # Display total chips
     if betting or playing:
         display_text(f'Available chips: {player.chips}', 100, 900)
 
@@ -324,11 +326,12 @@ while running:
             else:
                 end_game = True       # Ready to be settled
             display_hand(dealer_hand, 100, 200)     # Reviews dealer's hidden card
-            draw_score(dealer_score, 150, 600, "Dealer score")
+            draw_score(dealer_score, 150, 550, "Dealer score")
         else:         # Display dealer's hidden card
             display_hand(dealer_hand, 100, 200, True)
         player_score = calc_hand(player_hand)
-        draw_score(player_score, 650, 600, "Player score")
+        draw_score(player_score, 650, 550, "Player score")
+        display_text(f'Bet this round: {round_bet}', 650, 620)
 
     # User is entering bet amount
     if input_active:
