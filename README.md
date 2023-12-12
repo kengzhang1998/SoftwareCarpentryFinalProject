@@ -13,7 +13,7 @@
 3. Deal 1 card face up to each player
 4. Deal 1 card face up to players and 1 card face down to dealer
 ## Section 4 Play the hand
-1. When it is player's turn, ask player for options (hit/split/double/stand)
+1. When it is player's turn, ask player for options (hit/stand/double)
   1.5 When the player's card values > 21, assign "bust" to the player
 2. Play other player's cards with AI logic
 3. Play dealer's hand (keep hitting until 17 is reached)
