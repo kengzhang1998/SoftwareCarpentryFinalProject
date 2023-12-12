@@ -8,10 +8,8 @@ The player can customize game settings at the start of the game.
 # This is the main file for the final project
 
 from deck_model import *
-import random
 import pygame
 import sys
-import time
 
 # initializing pygame
 pygame.init()
@@ -198,7 +196,8 @@ round_bet = 0             # User betting amount
 warning_status = -1       # Tracks the warning message to be displayed
 warning_texts = ["You don't have enough chips to place this bet!",
                  "Please make a bet before beginning round!",
-                 "You don't have enough chips to double your bet"]
+                 "You don't have enough chips to double your bet",
+                 "Please only add chips when your remaining chips is less than 500"]
 
 # Initialize variables that update/reset each round
 dealer_hand = []
@@ -210,6 +209,14 @@ dealer_score = 0
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
 clock = pygame.time.Clock()
+
+
+def make_button(x, y, w, h, curr_text):
+    temp = pygame.draw.rect(screen, white, [x, y, w, h], 0, 5)
+    pygame.draw.rect(screen, red, [x, y, w, h], 3, 5)
+    temp_text = button_font.render(curr_text, True, black)
+    screen.blit(temp_text, (x + 35, y + 20))
+    return temp
 
 
 # Button method
@@ -224,45 +231,29 @@ def make_buttons(betting_status, playing_status, curr_player, new_game_status):
     """
     button_list = []
     if betting_status:
-        bet = pygame.draw.rect(screen, white, [550, 20, 300, 100], 0, 5)
-        pygame.draw.rect(screen, red, [550, 20, 300, 100], 3, 5)
-        bet_text = button_font.render('BET', True, black)
-        screen.blit(bet_text, (585, 50))
+        bet = make_button(550, 20, 300, 100, 'BET')
         button_list.append(bet)
+        add_chips = make_button(150, 700, 300, 100, 'ADD CHIPS')
+        button_list.append(add_chips)
     if not playing_status:
-        deal = pygame.draw.rect(screen, white, [150, 20, 300, 100], 0, 5)
-        pygame.draw.rect(screen, red, [150, 20, 300, 100], 3, 5)
-        deal_text = button_font.render('DEAL', True, black)
-        screen.blit(deal_text, (165, 50))
+        deal = make_button(150, 20, 300, 100, 'DEAL')
         button_list.append(deal)
     else:
         # Implement hit button
-        hit = pygame.draw.rect(screen, white, [0, 700, 300, 100], 0, 5)
-        pygame.draw.rect(screen, red, [0, 700, 300, 100], 3, 5)
-        hit_text = button_font.render('HIT', True, black)
-        screen.blit(hit_text, (55, 735))
+        hit = make_button(50, 700, 300, 100, 'HIT')
         button_list.append(hit)
         # Implement stand button
-        stand = pygame.draw.rect(screen, white, [300, 700, 300, 100], 0, 5)
-        pygame.draw.rect(screen, red, [300, 700, 300, 100], 3, 5)
-        stand_text = button_font.render('STAND', True, black)
-        screen.blit(stand_text, (355, 735))
+        stand = make_button(350, 700, 300, 100, 'STAND')
         button_list.append(stand)
         # Implement Double button
-        double = pygame.draw.rect(screen, white, [600, 700, 300, 100], 0, 5)
-        pygame.draw.rect(screen, red, [600, 700, 300, 100], 3, 5)
-        double_text = button_font.render('DOUBLE', True, black)
-        screen.blit(double_text, (655, 735))
+        double = make_button(650, 700, 300, 100, 'DOUBLE')
         button_list.append(double)
         # Display records
         records = curr_player.get_records()
         score_text = game_font.render(f'Wins: {records[0]} Losses: {records[1]} Draws: {records[2]}', True, white)
         screen.blit(score_text, (15, 840))
     if new_game_status:
-        next_game = pygame.draw.rect(screen, white, [300, 100, 300, 100], 0, 5)
-        pygame.draw.rect(screen, red, [300, 100, 300, 100], 3, 5)
-        game_text = button_font.render('New Game', True, black)
-        screen.blit(game_text, (350, 100))
+        next_game = make_button(300, 100, 300, 100, 'NEW GAME')
         button_list.append(next_game)
     return button_list
 
@@ -334,39 +325,45 @@ def deal_cards(curr_dealer_hand, curr_player_hand, curr_game):
 
 
 def draw_score(curr_score, x, y, text):
-    screen.blit(text_font.render(f'{text:}[{curr_score}]', True, black), (x, y))
+    screen.blit(text_font.render(f'{text} [{curr_score}]', True, black), (x, y))
 
 
 while running:
+    # Set game frame rate
     timer.tick(fps)
+
+    # Fill background
     screen.fill(green)
 
     # Install buttons
     buttons = make_buttons(betting, playing, player, new_game)
     display_text(f'Available chips: {player.chips}', 100, 900)
 
+    # If a new round is started
     if playing:
         display_text("Dealer's hand", 100, 100)
         display_text("Player's hand", 600, 100)
-        display_hand(player_hand, 600, 250)
+        display_hand(player_hand, 600, 200)
         dealer_score = calc_hand(dealer_hand)
         if not can_act:       # Player turn finishes
             if dealer_score < 17:       # Dealer hits when value is < 17
                 dealer_hand.append(game.deck.deal_card())
             else:
                 end_game = True       # Ready to be settled
-            display_hand(dealer_hand, 100, 250)     # Reviews dealer's hidden card
+            display_hand(dealer_hand, 100, 200)     # Reviews dealer's hidden card
             draw_score(dealer_score, 100, 600, "Dealer score")
         else:         # Display dealer's hidden card
-            display_hand(dealer_hand, 100, 250, True)
+            display_hand(dealer_hand, 100, 200, True)
         player_score = calc_hand(player_hand)
         draw_score(player_score, 600, 600, "Player score")
 
+    # User is entering bet amount
     if input_active:
         display_text(f'Please enter amount you want to bet: {user_text}', 100, 200)
 
+    # Display warning message
     if warning_status >= 0:
-        display_text(warning_texts[warning_status], 200, 200)
+        display_text(warning_texts[warning_status], 100, 200)
 
     # Handle events
     for event in pygame.event.get():
@@ -374,12 +371,19 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONUP:
             if betting:
-                if buttons[1].collidepoint(event.pos):
+                if buttons[2].collidepoint(event.pos):
                     warning_status = 1
                     input_active = False
                 elif buttons[0].collidepoint(event.pos):
                     input_active = True
                     warning_status = -1
+                elif buttons[1].collidepoint(event.pos):
+                    if player.chips < 500:
+                        player.add_chips(500)
+                        warning_status = -1
+                    else:
+                        warning_status = 3
+                    input_active = False
                 else:
                     input_active = False
             elif not playing:
