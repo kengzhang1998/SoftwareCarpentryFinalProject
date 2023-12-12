@@ -289,7 +289,12 @@ def draw_score(curr_score, x, y, text):
 
 
 def display_results():
-    pass
+    screen.blit(game_font.render('Summary', True, black), (400, 100))
+    screen.blit(game_font.render(f'Chips added: {player.bought_chips}', True, black), (100, 200))
+    screen.blit(game_font.render(f'Chips total: {player.chips}', True, black), (100, 300))
+    screen.blit(game_font.render(f'Net earnings: {player.chips - player.bought_chips}', True, black), (100, 400))
+    screen.blit(game_font.render(f'Win/loss/draw: {player.records[0]}/{player.records[1]}/{player.records[2]}', True, black), (100, 500))
+    screen.blit(game_font.render(f'Win rate: {player.win_probability()*100}%', True, black), (100, 600))
 
 
 while running:

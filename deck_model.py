@@ -138,16 +138,18 @@ class Player:
         elif condition == 'draw':
             self.records[2] += 1
 
-    def display_results(self):
+    def win_probability(self):
         """
         Returns summary statistics of user
         Returns:
             float: win probability of player
             int: earnings of player
         """
-        win_probability = self.records[0]/(sum(self.records))
-        earnings = self.chips - self.bought_chips
-        return win_probability, earnings
+        if sum(self.records) != 0:
+            win_probability = self.records[0]/(sum(self.records))
+            return win_probability
+        else:
+            return 0
 
     def get_records(self):
         """
