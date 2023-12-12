@@ -402,9 +402,9 @@ while running:
 
     # Install buttons
     buttons = make_buttons(betting, playing, player, new_game)
+    display_text(f'Available chips: {player.chips}', 100, 900)
 
     if playing:
-        display_text(f'Available chips: {player.chips}', 100, 900)
         display_text("Dealer's hand", 100, 100)
         display_text("Player's hand", 600, 100)
         display_hand(player_hand, 600, 250)
@@ -462,7 +462,6 @@ while running:
         if event.type == pygame.KEYDOWN:
             if input_active:
                 if event.key == pygame.K_RETURN:
-                    print(user_text)
                     betting = False
                     round_bet = int(user_text)
                     player.bet(round_bet)
