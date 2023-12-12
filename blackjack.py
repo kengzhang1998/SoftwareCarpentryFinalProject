@@ -214,10 +214,21 @@ def play_hand(players, dealer, deck):
 
 
 def is_black_jack(curr_hand):
-    pass
+    ace = []
+    not_ace = []
+    for card in curr_hand:
+        if card.get_value() == 'A':
+            ace.append(card)
+        else:
+            not_ace.append(card)
+    if len(ace) == 1:
+        if len(not_ace) == 1:
+            if not_ace[0].get_value() in 'JQK10':
+                return True
+    return False
 
 
-def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
+def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet, status):
     """
     Settles bets at the end of each round based on the hand of player vs dealer
     Args:
@@ -228,30 +239,30 @@ def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
     """
     dealer_value = calc_hand(curr_dealer_hand)
     player_value = calc_hand(curr_player_hand)
+    new_bet = 0
     if player_value > 21:    # Player bust, loses bet
-        curr_player.settle(0)
         condition = 'loss'
     elif is_black_jack(curr_player_hand):  # Player Blackjack
         if is_black_jack(curr_dealer_hand):   # Dealer also gets Blackjack, tie
-            curr_player.settle(curr_bet)
+            new_bet = curr_bet
             condition = 'draw'
         else:                        # Only player has blackjack, wins 2.5 * bet
-            curr_player.settle(2.5 * curr_bet)
+            new_bet = curr_bet * 2.5
             condition = 'win'
     elif is_black_jack(curr_dealer_hand):  # Dealer Blackjack only, loses bet
-        curr_player.settle(0)
         condition = 'loss'
     else:
         if player_value > dealer_value or dealer_value > 21:  # Dealer busts or smaller than player
-            curr_player.settle(2 * curr_bet)
+            new_bet = curr_bet * 2
             condition = 'win'
         elif player_value < dealer_value:  # Dealer has bigger hand
-            curr_player.settle(0)
             condition = 'loss'
         else:  # Dealer and player has same value
-            curr_player.settle(curr_bet)
+            new_bet = curr_bet
             condition = 'draw'
-    curr_player.tally(condition)
+    if status:
+        curr_player.tally(condition)
+        curr_player.settle(new_bet)
 
 
 # Initializing the game
@@ -275,6 +286,7 @@ fps = 60
 playing = False           # Tracks if the round is active
 can_act = False           # Tracks if the player can take actions
 end_game = False          # Tracks if the end game is reached
+scoring = False           # Tracks if scoring can happen
 
 # Initialize variables that update/reset each round
 dealer_hand = []
@@ -387,7 +399,6 @@ while running:
         player_score = calc_hand(player_hand)
         draw_score(player_score, 600,600, "Player score")
 
-
     # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -410,9 +421,8 @@ while running:
         can_act = False
 
     if end_game:
-        settle_bets(player_hand, dealer_hand, player, 10)
+        settle_bets(player_hand, dealer_hand, player, 10, end_game)
         end_game = False
-        playing = False
 
     # Update portion of the screen
     pygame.display.flip()
