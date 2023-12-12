@@ -277,6 +277,9 @@ can_act = False           # Tracks if the player can take actions
 end_game = False          # Tracks if the end game is reached
 scoring = False           # Tracks if scoring can happen
 new_game = False          # Allows for a new game
+betting = True           # Tracks if the user is in betting stage or not
+input_active = False      # Allows user to enter bet amount if active
+user_text = ''            # User input into betting text inbox
 
 # Initialize variables that update/reset each round
 dealer_hand = []
@@ -291,8 +294,14 @@ clock = pygame.time.Clock()
 
 
 # Button method
-def make_buttons(playing_status, curr_player, new_game_status):
+def make_buttons(betting_status, playing_status, curr_player, new_game_status):
     button_list = []
+    if betting_status:
+        bet = pygame.draw.rect(screen, white, [550, 20, 300, 100], 0, 5)
+        pygame.draw.rect(screen, red, [550, 20, 300, 100], 3, 5)
+        bet_text = button_font.render('BET', True, black)
+        screen.blit(bet_text, (585, 50))
+        button_list.append(bet)
     if not playing_status:
         deal = pygame.draw.rect(screen, white, [150, 20, 300, 100], 0, 5)
         pygame.draw.rect(screen, red, [150, 20, 300, 100], 3, 5)
@@ -376,7 +385,7 @@ while running:
     screen.fill(green)
 
     # Install buttons
-    buttons = make_buttons(playing, player, new_game)
+    buttons = make_buttons(betting, playing, player, new_game)
 
     if playing:
         display_text(f'Available chips: {player.chips}', 100, 900)
@@ -396,12 +405,20 @@ while running:
         player_score = calc_hand(player_hand)
         draw_score(player_score, 600,600, "Player score")
 
+    if betting:
+        display_text(user_text, 900, 900)
+
     # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONUP:
-            if not playing:
+            if betting:
+                if buttons[0].collidepoint(event.pos):
+                    input_active = True
+                else:
+                    input_active = False
+            elif not playing:
                 if buttons[0].collidepoint(event.pos):
                     playing = True
                     dealer_hand = []
@@ -425,6 +442,17 @@ while running:
                         can_act = True
                         player_score = 0
                         dealer_score = 0
+                        betting = True
+        if event.type == pygame.KEYDOWN:
+            if input_active:
+                if event.key == pygame.K_RETURN:
+                    print(user_text)
+                    user_text = ''
+                    betting = False
+                elif event.key == pygame.K_BACKSPACE:
+                    user_text = user_text[:-1]
+                else:
+                    user_text += event.unicode
     # If player has reached 21 after hitting
     if can_act and player_score >= 21:
         can_act = False
