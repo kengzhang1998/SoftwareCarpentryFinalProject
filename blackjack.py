@@ -147,12 +147,14 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
 clock = pygame.time.Clock()
 
+
 def make_button(x, y, w, h, curr_text):
     temp = pygame.draw.rect(screen, white, [x, y, w, h], 0, 5)
     pygame.draw.rect(screen, red, [x, y, w, h], 3, 5)
     temp_text = button_font.render(curr_text, True, black)
     screen.blit(temp_text, (x + 35, y + 20))
     return temp
+
 
 # Button method
 def make_buttons(betting_status, playing_status, curr_player, new_game_status, end_game_status):
@@ -298,6 +300,7 @@ def display_results():
     screen.blit(game_font.render(f'Net earnings: {player.chips - player.bought_chips}', True, black), (100, 400))
     screen.blit(game_font.render(f'Win/loss/draw: {player.records[0]}/{player.records[1]}/{player.records[2]}', True, black), (100, 500))
     screen.blit(game_font.render(f'Win rate: {player.win_probability()*100}%', True, black), (100, 600))
+
 
 while running:
     # Set game frame rate
