@@ -15,8 +15,8 @@
 ## Section 4 Play the hand
 1. When it is player's turn, ask player for options (hit/stand/double)
   1.1 Hit allows player to add cards if total score is less than 21
-  1.3 If playing presses 'double' button, player draws one card and ends the turn
-  1.2 When player presses 'stand' button, player ends the turn
+  1.2 If playing presses 'double' button, player draws one card and ends the turn
+  1.3 When player presses 'stand' button, player ends the turn
 2. Dealer automatically fills dealer's hand (keep hitting until 17 is reached or bust)
 3. Display results
 ## Section 5 Settlement
