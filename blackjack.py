@@ -421,8 +421,8 @@ while running:
         player_score = calc_hand(player_hand)
         draw_score(player_score, 600, 600, "Player score")
 
-    if betting:
-        display_text(user_text, 900, 900)
+    if input_active:
+        display_text(f'Please enter amount you want to bet: {user_text}', 100, 200)
 
     # Handle events
     for event in pygame.event.get():
@@ -466,6 +466,7 @@ while running:
                     round_bet = int(user_text)
                     player.bet(round_bet)
                     user_text = ''
+                    input_active = False
                 elif event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                 else:
