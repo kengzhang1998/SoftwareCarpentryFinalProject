@@ -76,67 +76,6 @@ class BlackjackGame:
         else:
             return "medium"
 
-    def bet(self, amount):
-        """
-        Places a bet for the current player.
-        Args:
-            amount (int): The amount to bet.
-        """
-        # Get the current player
-        current_player = self.players[0]
-
-        # Check if the player has enough chips
-        if current_player.chips >= amount:
-            # Deduct the bet amount from the player's chips
-            current_player.chips -= amount
-            # Record the bet amount
-            self.player_bet = amount
-            print(f"{current_player.name} has placed a bet of {amount}. Remaining chips: {current_player.chips}")
-        else:
-            # Not enough chips to place the bet
-            print(f"Insufficient chips. You have {current_player.chips}, but tried to bet {amount}.")
-
-        pass
-
-    def double(self):
-        """
-        The player doubles their bet, receives one more card, and then stands.
-        """
-        # Assuming the first player in the list is the current player
-        current_player = self.players[0]  
-        if current_player.chips >= self.player_bet:
-            current_player.chips -= self.player_bet
-            self.player_bet *= 2
-            print(f"Bet doubled. New bet is {self.player_bet}.")
-            self.hit()
-            self.stand()
-        else:
-            print("Not enough chips to double the bet.")
-
-        pass
-
-    def hit(self):
-        """
-        The player receives another card. If the total exceeds 21, they bust.
-        """
-        # Assuming the first player in the list is the current player
-        current_player = self.players[0]
-        new_card = self.deck.deal_card()
-        current_player.hand.add_card(new_card)
-        print(f"Dealt {new_card}. Total hand value now: {current_player.hand.value}")
-
-        if current_player.hand.value > 21:
-            print("Bust! You've exceeded 21.")
-
-        pass
-
-    def stand(self):
-        """
-        The player ends their turn without taking any additional cards.
-        """
-        print("Stand. No more cards.")
-        pass
-
     def quit(self):
         """
         Quits the game if user decides to press the quit button
@@ -165,34 +104,6 @@ def display_hand(curr_hand, x, y, is_dealer=False):
             image = item.get_image()
             image = pygame.transform.scale(image, (card_width, card_height))
             screen.blit(image, (x + index * 50, y + index * 10))
-
-
-def place_bets_and_deal(players, dealer, deck):
-    """
-    Handles the betting and dealing of cards at the start of each game round.
-    Args:
-        players (list): Players in the game.
-        dealer (object): Dealer of the game.
-        deck (object): Deck of cards.
-    """
-    if len(deck) < 52:
-        deck.shuffle()
-
-    for player in players:
-        if player.ask_for_chips():
-            player.add_chips()
-
-        bet_amount = player.place_bet()
-        player.bet(bet_amount)
-
-        # Deal cards
-        player.hand.append(deck.deal_card(face_up=True))
-        dealer.hand.append(deck.deal_card(face_up=True))
-
-    # Deal second round of cards
-    for player in players:
-        player.hand.append(deck.deal_card(face_up=True))
-    dealer.hand.append(deck.deal_card(face_up=False))
 
 
 def is_black_jack(curr_hand):
@@ -281,6 +192,10 @@ betting = True            # Tracks if the user is in betting stage or not
 input_active = False      # Allows user to enter bet amount if active
 user_text = ''            # User input into betting text inbox
 round_bet = 0             # User betting amount
+warning_status = -1       # Tracks the warning message to be displayed
+warning_texts = ["You don't have enough chips to place this bet!",
+                 "Please make a bet before beginning round!",
+                 "You don't have enough chips to double your bet"]
 
 # Initialize variables that update/reset each round
 dealer_hand = []
@@ -386,6 +301,22 @@ def display_text(text, x, y):
     screen.blit(text_font.render(text, True, black), (x, y))
 
 
+def can_bet(curr_chips, intended_bet):
+    """
+    Determines if a given bet is valid
+    Args:
+        curr_chips (int): number of chips a player has
+        intended_bet: the amount of chips that player tries to put down
+
+    Returns:
+        bool: whether a given bet can be made
+    """
+    if curr_chips < intended_bet:
+        return False
+    else:
+        return True
+
+
 # Variable to determine if the game is running
 running = True
 
@@ -433,14 +364,21 @@ while running:
     if input_active:
         display_text(f'Please enter amount you want to bet: {user_text}', 100, 200)
 
+    if warning_status >= 0:
+        display_text(warning_texts[warning_status], 200, 200)
+
     # Handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONUP:
             if betting:
-                if buttons[0].collidepoint(event.pos):
+                if buttons[1].collidepoint(event.pos):
+                    warning_status = 1
+                    input_active = False
+                elif buttons[0].collidepoint(event.pos):
                     input_active = True
+                    warning_status = -1
                 else:
                     input_active = False
             elif not playing:
@@ -453,14 +391,19 @@ while running:
                     scoring = False
             else:
                 if buttons[0].collidepoint(event.pos) and player_score < 21 and can_act:
+                    warning_status = -1
                     player_hand.append(game.deck.deal_card())
                 elif buttons[1].collidepoint(event.pos):
+                    warning_status = -1
                     can_act = False
                 elif buttons[2].collidepoint(event.pos) and player_score < 21 and can_act and len(player_hand) == 2:
-                    player_hand.append(game.deck.deal_card())
-                    player.bet(round_bet)
-                    round_bet = round_bet * 2
-                    can_act = False
+                    if can_bet(player.chips, round_bet):
+                        player_hand.append(game.deck.deal_card())
+                        player.bet(round_bet)
+                        round_bet = round_bet * 2
+                        can_act = False
+                    else:
+                        warning_status = 2
                 elif len(buttons) == 4:
                     if buttons[3].collidepoint(event.pos):
                         scoring = False
@@ -476,11 +419,15 @@ while running:
         if event.type == pygame.KEYDOWN:
             if input_active:
                 if event.key == pygame.K_RETURN:
-                    betting = False
                     round_bet = int(user_text)
-                    player.bet(round_bet)
-                    user_text = ''
+                    if can_bet(player.chips, round_bet):
+                        betting = False
+                        player.bet(round_bet)
+                    else:
+                        round_bet = 0
+                        warning_status = 0
                     input_active = False
+                    user_text = ''
                 elif event.key == pygame.K_BACKSPACE:
                     user_text = user_text[:-1]
                 else:
@@ -489,6 +436,7 @@ while running:
     if can_act and player_score >= 21:
         can_act = False
 
+    # Perform bet settling
     if end_game and scoring is False:
         new_game = settle_bets(player_hand, dealer_hand, player, round_bet)
         scoring = True
