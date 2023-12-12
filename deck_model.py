@@ -64,9 +64,10 @@ class Deck:
         and shuffles them.
         """
         self.cards = []
-        for suit in suits:
-            for value in values:
-                self.cards.append(Card(suit, value))
+        for i in range(4):
+            for suit in suits:
+                for value in values:
+                    self.cards.append(Card(suit, value))
         self.shuffle_deck()
 
     def shuffle_deck(self):
@@ -86,9 +87,10 @@ class Deck:
         if len(self.cards) >= 1:
             return self.cards.pop()
         else:
-            for suit in suits:
-                for value in values:
-                    self.cards.append(Card(suit, value))
+            for i in range(4):
+                for suit in suits:
+                    for value in values:
+                        self.cards.append(Card(suit, value))
             self.shuffle_deck()
             return self.cards.pop()
     
