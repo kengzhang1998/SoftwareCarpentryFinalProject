@@ -300,6 +300,7 @@ def display_results():
     screen.blit(game_font.render(f'Net earnings: {player.chips - player.bought_chips}', True, black), (100, 400))
     screen.blit(game_font.render(f'Win/loss/draw: {player.records[0]}/{player.records[1]}/{player.records[2]}', True, black), (100, 500))
     screen.blit(game_font.render(f'Win rate: {player.win_probability()*100}%', True, black), (100, 600))
+    screen.blit(game_font.render('Thank you for playing!', True, black), (300, 800))
 
 
 while running:
