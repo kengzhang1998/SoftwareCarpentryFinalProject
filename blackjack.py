@@ -213,32 +213,31 @@ def play_hand(players, dealer, deck):
         dealer.hand.append(deck.deal_card(face_up=True))
 
 
-def settle_bets(player_hands, dealer_hand):
+def settle_bets(curr_player_hand, curr_dealer_hand):
     """
-    Settles bets at the end of each round based on the hands of each player.
+    Settles bets at the end of each round based on the hand of player vs dealer
     Args:
-        player_hands (list of Hand objects): The list of hands of players in the game.
-        dealer_hand (Hand object): The hand of dealer this round.
+        curr_player_hand (list of cards): The hand of player this round.
+        curr_dealer_hand (list of cards): The hand of dealer this round.
     """
-    dealer_value = dealer_hand.calc_hand()
-    for curr_hand in player_hands:
-        player_value = curr_hand.calc_hand()
-        if curr_hand.value > 21:
-            curr_hand.lose_bet()
-        elif curr_hand.get_blackjack:  # Blackjack
-            curr_hand.win_bet(1.5)
-        elif dealer_hand.get_blackjack:  # Dealer Blackjack
-            if curr_hand.get_blackjack is False:
-                curr_hand.lose_bet()
-            else:
-                curr_hand.tie_bet()
+    dealer_value = calc_hand(curr_dealer_hand)
+    player_value = calc_hand(curr_player_hand)
+    if player_value > 21:
+        curr_player_hand.lose_bet()
+    elif curr_player_hand.get_blackjack:  # Blackjack
+        curr_player_hand.win_bet(1.5)
+    elif curr_dealer_hand.get_blackjack:  # Dealer Blackjack
+        if curr_player_hand.get_blackjack is False:
+            curr_player_hand.lose_bet()
         else:
-            if player_value > dealer_value or dealer_value > 21:
-                curr_hand.win_bet()
-            elif player_value < dealer_value:
-                curr_hand.lose_bet()
-            else:
-                curr_hand.tie_bet()
+            curr_player_hand.tie_bet()
+    else:
+        if player_value > dealer_value or dealer_value > 21:
+            curr_player_hand.win_bet()
+        elif player_value < dealer_value:
+            curr_player_hand.lose_bet()
+        else:
+            curr_player_hand.tie_bet()
 
 
 # Initializing the game
@@ -262,11 +261,13 @@ fps = 60
 playing = False           # Tracks if the round is active
 can_act = False           # Tracks if the player can take actions
 
+# Initialize variables that update/reset each round
 dealer_hand = []
 player_hand = []
 player_score = 0
 dealer_score = 0
 
+# Set up display, caption, clock
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
 clock = pygame.time.Clock()
@@ -388,6 +389,8 @@ while running:
     # Debug
     if can_act and player_score >= 21:
         can_act = False
+
+    # settle_bets(dealer_hand)
 
     # Update portion of the screen
     pygame.display.flip()
