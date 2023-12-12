@@ -335,6 +335,8 @@ running = True
 player = Player(500, 0)
 player.tally('win')
 
+# print(line)
+
 
 # Main game loop for when the game is running
 def deal_cards(curr_dealer_hand, curr_player_hand, curr_game):
