@@ -12,11 +12,12 @@ values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 
 class Card:
     """
-    Represents a single playing card with a suit, value, and associated pygame image.
+    Represents a playing card with suit, value, and image.
     Attributes:
         suit (str): The suit of the card (e.g., 'Club', 'Spade').
         value (str): The value of the card (e.g., '2', 'A').
-        image (pygame.Surface): The pygame image object representing the card's visual.
+        image (pygame.Surface): The pygame image object 
+        representing the card's visual.
     Methods:
         get_value: Returns the value of the card.
         get_image: Returns the pygame image of the card.
@@ -95,7 +96,7 @@ class Deck:
 
 class Player:
     """
-    Represents a player in a card game, managing their chips and game records.
+    Represents a player in a card game, handling chips and records.
     Attributes:
         bought_chips (int): The initial number of chips bought by the player.
         chips (int): The current number of chips the player has.
