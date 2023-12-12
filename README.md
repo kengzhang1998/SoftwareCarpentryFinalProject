@@ -1,30 +1,30 @@
 # Software Carpentry Final Project
-## Section 1 Initializing deck
+## Section 1 Initializing game
 1. Creating 4 decks with 52 cards
 2. Randomly shuffle decks in the beginning
-3. Keep track of dealt cards, reshuffle when remaining card < 0
-## Section 2 Initializing game
-1. At the beginning of the game, ask player for # of computer players (5 player max)
-2. Assign player 500 chips
-3. Ask player to choose AI difficulty (optional)
-## Section 3 Placing bets and dealing
-1. At beginning of each game, ask player if they want more chips
-2. Ask player to place bets
-3. Deal 1 card face up to each player
-4. Deal 1 card face up to players and 1 card face down to dealer
+3. Keep track of dealt cards, add 4 decks and reshuffle when remaining card is 0
+4. Create player object and assign 500 chips
+## Section 2 Placing bets
+1. At beginning of each game, player can add 500 chips if their current chip amount is less than 500
+2. Ask the player to place bets (check if the bet is valid)
+3. Player can click 'Deal' button to proceed to playing
+## Section 3 Dealing
+1. Deal 1 card face up the player and the dealer
+2. Deal 1 card face up to the player and 1 card face down to dealer
+3. Display cards
 ## Section 4 Play the hand
 1. When it is player's turn, ask player for options (hit/stand/double)
-  1.5 When the player's card values > 21, assign "bust" to the player
-2. Play other player's cards with AI logic
-3. Play dealer's hand (keep hitting until 17 is reached)
+  1.1 Hit allows player to add cards if total score is less than 21
+  1.2 If playing presses 'double' button, player draws one card and ends the turn
+  1.3 When player presses 'stand' button, player ends the turn
+2. Dealer automatically fills dealer's hand (keep hitting until 17 is reached or bust)
+3. Display results
 ## Section 5 Settlement
-1. Players who went bust have their bets taken
-2. Players who score Ace+face card gets 1.5*bet
-3. If dealer rolls Ace+face, all players without Ace+face loses their bets, and the rest are a tie
-4. For all other players, calculate bets based on card values
-## Section 6
-1. Use pygame module to create GUI for the game
-2. Create interface with buttons including chip management, difficulty selection, player selection etc.
-3. Create interface for betting options
-4. Create interface for game round (hit/stand/double etc.)
-5. Load unique images of 52 cards and be able to display the hand
+1. Player who went bust have their bets taken
+2. Player who score Ace+face card gets 2.5*bet
+3. If dealer rolls Ace+face, all players without Ace+face loses their bets, and the rest are a tie (bet returns to player)
+4. For all other conditions, calculate bets based on card values
+5. A 'new game' button can be pressed to repeat steps 2-5 
+## Section 6 Summary
+1. Pressing the 'summary' button at any time will cause the game to end and the settlement screen to appear
+2. Results including wins, losses, win rate, earned or lost money will be displayed
