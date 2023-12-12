@@ -195,36 +195,6 @@ def place_bets_and_deal(players, dealer, deck):
     dealer.hand.append(deck.deal_card(face_up=False))
 
 
-def play_hand(players, dealer, deck):
-    """
-    Manages the actions of each player during their turn in the game.
-    Args:
-        players (list of Player objects): The list of players in the game.
-        dealer (Dealer object): The dealer of the game.
-        deck (Deck object): The deck of cards used in the game.
-    """
-    for player in players:
-        while True:
-            action = player.choose_action()
-            if action == 'hit':
-                player.hand.append(deck.deal_card(face_up=True))
-                if player.calculate_hand_value() > 21:
-                    player.status = 'bust'
-                    break
-            elif action in ['split', 'double', 'stand']:
-                # Implement the logic for split, double, stand
-                break
-
-    # AI players' turns
-    for player in players:
-        if player.is_ai:
-            ai_logic(player)
-
-    # Dealer's turn
-    while dealer.calculate_hand_value() < 17:
-        dealer.hand.append(deck.deal_card(face_up=True))
-
-
 def is_black_jack(curr_hand):
     """
     Determines if a hand is a blackjack.
@@ -458,7 +428,6 @@ while running:
     if end_game and scoring is False:
         new_game = settle_bets(player_hand, dealer_hand, player, 10)
         scoring = True
-
 
     # Update portion of the screen
     pygame.display.flip()
