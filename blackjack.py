@@ -9,7 +9,6 @@ The player can customize game settings at the start of the game.
 
 from deck_model import *
 import pygame
-import sys
 
 # initializing pygame
 pygame.init()
@@ -91,29 +90,37 @@ def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
     dealer_value = calc_hand(curr_dealer_hand)
     player_value = calc_hand(curr_player_hand)
     new_bet = 0
+    message = ''
     if player_value > 21:    # Player bust, loses bet
         condition = 'loss'
+        message = "You busted!"
     elif is_black_jack(curr_player_hand):  # Player Blackjack
         if is_black_jack(curr_dealer_hand):   # Dealer also gets Blackjack, tie
             new_bet = curr_bet
             condition = 'draw'
+            message = "You both get blackjack, it's a draw!"
         else:                        # Only player has blackjack, wins 2.5 * bet
             new_bet = curr_bet * 2.5
             condition = 'win'
+            message = "You win blackjack! Congratulations!"
     elif is_black_jack(curr_dealer_hand):  # Dealer Blackjack only, loses bet
         condition = 'loss'
+        message = "Dealer gets blackjack! You lose"
     else:
         if player_value > dealer_value or dealer_value > 21:  # Dealer busts or smaller than player
             new_bet = curr_bet * 2
             condition = 'win'
+            message = "You won this round!"
         elif player_value < dealer_value:  # Dealer has bigger hand
             condition = 'loss'
+            message = 'Dealer wins this round!'
         else:  # Dealer and player has same value
             new_bet = curr_bet
             condition = 'draw'
+            message = "You have the same value, it's a draw!"
     curr_player.tally(condition)
     curr_player.settle(new_bet)
-    return True
+    return True, message
 
 
 # Initializing the game
@@ -125,8 +132,6 @@ card_width, card_height = 200, 300
 card_gap = 20
 black = (0, 0, 0)
 white = (255, 255, 255)
-DARK = (100, 100, 100)      # Dark color
-LIGHT = (170, 170, 170)     # Light color
 red = (255, 0, 0)
 green = (0, 128, 0)
 button_font = pygame.font.SysFont('arial', 45)
@@ -152,6 +157,7 @@ warning_texts = ["You don't have enough chips to place this bet!",
                  "You don't have enough chips to double your bet",
                  "Please only add chips when your remaining chips is less than 500"]
 results = False           # Display game summary when user clicks 'Summary'
+round_message = ''        # Message that displays results at end of each round
 
 # Initialize variables that update/reset each round
 dealer_hand = []
@@ -317,7 +323,7 @@ while running:
     # If a new round is started
     if playing:
         display_text("Dealer's hand", 150, 100)
-        display_text("Player's hand", 650, 100)
+        display_text("Player's hand", 690, 100)
         display_hand(player_hand, 600, 200)
         dealer_score = calc_hand(dealer_hand)
         if not can_act:       # Player turn finishes
@@ -325,6 +331,7 @@ while running:
                 dealer_hand.append(deck.deal_card())
             else:
                 end_game = True       # Ready to be settled
+                screen.blit(game_font.render(round_message, True, black), (100, 600))
             display_hand(dealer_hand, 100, 200)     # Reviews dealer's hidden card
             draw_score(dealer_score, 150, 550, "Dealer score")
         else:         # Display dealer's hidden card
@@ -428,7 +435,7 @@ while running:
 
     # Perform bet settling
     if end_game and scoring is False:
-        new_game = settle_bets(player_hand, dealer_hand, player, round_bet)
+        new_game, round_message = settle_bets(player_hand, dealer_hand, player, round_bet)
         scoring = True
 
     # Update portion of the screen
