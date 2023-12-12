@@ -16,6 +16,7 @@ import time
 # initializing pygame
 pygame.init()
 
+
 class BlackjackGame:
     """
     Manages a game of Blackjack, including players 
@@ -183,6 +184,8 @@ game_font = pygame.font.SysFont('comicsansms', 30)
 text_font = pygame.font.SysFont('times new roman', 30)
 timer = pygame.time.Clock()
 fps = 60
+
+# Game variables
 playing = False           # Tracks if the round is active
 can_act = False           # Tracks if the player can take actions
 end_game = False          # Tracks if the end game is reached
@@ -321,8 +324,6 @@ def can_bet(curr_chips, intended_bet):
 running = True
 
 player = Player(500, 0)
-
-# print(line)
 
 
 # Main game loop for when the game is running
