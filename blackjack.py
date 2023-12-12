@@ -274,6 +274,7 @@ timer = pygame.time.Clock()
 fps = 60
 playing = False           # Tracks if the round is active
 can_act = False           # Tracks if the player can take actions
+end_game = False          # Tracks if the end game is reached
 
 # Initialize variables that update/reset each round
 dealer_hand = []
@@ -347,7 +348,6 @@ def display_text(text, x, y):
 running = True
 
 player = Player(500, 0)
-player.tally('win')
 
 # print(line)
 
@@ -375,15 +375,18 @@ while running:
         display_text("Player's hand", 600, 100)
         display_hand(player_hand, 600, 250)
         dealer_score = calc_hand(dealer_hand)
-        if not can_act:
-            if dealer_score < 17:
+        if not can_act:       # Player turn finishes
+            if dealer_score < 17:       # Dealer hits when value is < 17
                 dealer_hand.append(game.deck.deal_card())
-            display_hand(dealer_hand, 100, 250)
+            else:
+                end_game = True       # Ready to be settled
+            display_hand(dealer_hand, 100, 250)     # Reviews dealer's hidden card
             draw_score(dealer_score, 100, 600, "Dealer score")
-        else:
+        else:         # Display dealer's hidden card
             display_hand(dealer_hand, 100, 250, True)
         player_score = calc_hand(player_hand)
         draw_score(player_score, 600,600, "Player score")
+
 
     # Handle events
     for event in pygame.event.get():
@@ -402,12 +405,14 @@ while running:
                     player_hand.append(game.deck.deal_card())
                 elif buttons[1].collidepoint(event.pos):
                     can_act = False
-    # Debug
+    # If player has reached 21 after hitting
     if can_act and player_score >= 21:
         can_act = False
 
-    # settle_bets(dealer_hand)
-
+    if end_game:
+        settle_bets(player_hand, dealer_hand, player, 10)
+        end_game = False
+        playing = False
 
     # Update portion of the screen
     pygame.display.flip()

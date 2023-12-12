@@ -63,7 +63,14 @@ class Deck:
         Returns:
             str: The top card from the deck.
         """
-        return self.cards.pop()
+        if len(self.cards) >= 1:
+            return self.cards.pop()
+        else:
+            for suit in suits:
+                for value in values:
+                    self.cards.append(Card(suit, value))
+            self.shuffle_deck()
+            return self.cards.pop()
 
     def length(self):
         """
