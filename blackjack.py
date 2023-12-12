@@ -379,6 +379,7 @@ while running:
     buttons = make_buttons(playing, player, new_game)
 
     if playing:
+        display_text(f'Available chips: {player.chips}', 100, 900)
         display_text("Dealer's hand", 100, 100)
         display_text("Player's hand", 600, 100)
         display_hand(player_hand, 600, 250)
