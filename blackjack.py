@@ -29,7 +29,7 @@ class BlackjackGame:
         bet: Player places a bet.
         double: Doubles player's bet and ends turn.
         hit: Adds card to player's hand, checks for bust.
-        stand: Ends player's turn.
+        stand: Ends player's turn without adding new cards.
         quit: Exits the game.
     """
 
@@ -83,8 +83,8 @@ def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
     """
     Settles bets based on player and dealer hands.
     Args:
-        curr_player_hand, 
-        curr_dealer_hand (list): Player and dealer hands.
+        curr_player_hand (list): The player's hand.
+        curr_dealer_hand (list): The dealer's hand.
         curr_player (object): Current player.
         curr_bet (int): Current bet amount.
     """
@@ -164,14 +164,12 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Blackjack game")
 clock = pygame.time.Clock()
 
-
 def make_button(x, y, w, h, curr_text):
     temp = pygame.draw.rect(screen, white, [x, y, w, h], 0, 5)
     pygame.draw.rect(screen, red, [x, y, w, h], 3, 5)
     temp_text = button_font.render(curr_text, True, black)
     screen.blit(temp_text, (x + 35, y + 20))
     return temp
-
 
 # Button method
 def make_buttons(betting_status, playing_status, curr_player, new_game_status, end_game_status):
@@ -251,6 +249,10 @@ def calc_hand(curr_hand):
 def display_text(text, x, y):
     """
     Displays text at specified coordinates on the screen.
+    Args:
+        text (str): The text to be displayed.
+        x (int): The x-coordinate for the text.
+        y (int): The y-coordinate for the text.
     """
     screen.blit(text_font.render(text, True, black), (x, y))
 
@@ -261,7 +263,6 @@ def can_bet(curr_chips, intended_bet):
     Args:
         curr_chips (int): number of chips a player has
         intended_bet: the amount of chips that player tries to put down
-
     Returns:
         bool: whether a given bet can be made
     """
@@ -279,23 +280,41 @@ player = Player(500, 0)
 
 # Main game loop for when the game is running
 def deal_cards(curr_dealer_hand, curr_player_hand, curr_deck):
+    """
+    Deals two cards each to the dealer and the player.
+    Args:
+        curr_dealer_hand (list): The current hand of the dealer.
+        curr_player_hand (list): The current hand of the player.
+        curr_deck (Deck): The deck of cards being used.
+    """
     for i in range(2):
         curr_dealer_hand.append(curr_deck.deal_card())
         curr_player_hand.append(curr_deck.deal_card())
 
 
 def draw_score(curr_score, x, y, text):
+    """
+    Draws the score of a hand on the game screen.
+    Args:
+        curr_score (int): The score to be displayed.
+        x (int): The x-coordinate for the score.
+        y (int): The y-coordinate for the score.
+        text (str): Additional text to display alongside the score.
+    """
     screen.blit(text_font.render(f'{text} [{curr_score}]', True, black), (x, y))
 
 
 def display_results():
+    """
+    Displays the summary of the game, including chips added, 
+    total chips, net earnings, and win/loss/draw records.
+    """
     screen.blit(game_font.render('Summary', True, black), (400, 100))
     screen.blit(game_font.render(f'Chips added: {player.bought_chips}', True, black), (100, 200))
     screen.blit(game_font.render(f'Chips total: {player.chips}', True, black), (100, 300))
     screen.blit(game_font.render(f'Net earnings: {player.chips - player.bought_chips}', True, black), (100, 400))
     screen.blit(game_font.render(f'Win/loss/draw: {player.records[0]}/{player.records[1]}/{player.records[2]}', True, black), (100, 500))
     screen.blit(game_font.render(f'Win rate: {player.win_probability()*100}%', True, black), (100, 600))
-
 
 while running:
     # Set game frame rate
