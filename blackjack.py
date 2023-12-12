@@ -281,6 +281,7 @@ def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
             condition = 'draw'
     curr_player.tally(condition)
     curr_player.settle(new_bet)
+    return True
 
 
 # Initializing the game
@@ -320,7 +321,7 @@ clock = pygame.time.Clock()
 
 
 # Button method
-def make_buttons(playing_status, curr_player):
+def make_buttons(playing_status, curr_player, new_game_status):
     button_list = []
     if not playing_status:
         deal = pygame.draw.rect(screen, white, [150, 20, 300, 100], 0, 5)
@@ -342,6 +343,12 @@ def make_buttons(playing_status, curr_player):
         records = curr_player.get_records()
         score_text = game_font.render(f'Wins: {records[0]} Losses: {records[1]} Draws: {records[2]}', True, white)
         screen.blit(score_text, (15, 840))
+    if new_game_status:
+        next_game = pygame.draw.rect(screen, white, [300, 100, 300, 100], 0, 5)
+        pygame.draw.rect(screen, red, [300, 100, 300, 100], 3, 5)
+        game_text = button_font.render('New Game', True, black)
+        screen.blit(game_text, (350, 100))
+        button_list.append(next_game)
     return button_list
 
 
@@ -399,7 +406,7 @@ while running:
     screen.fill(green)
 
     # Install buttons
-    buttons = make_buttons(playing, player)
+    buttons = make_buttons(playing, player, new_game)
 
     if playing:
         display_text("Dealer's hand", 100, 100)
@@ -430,17 +437,26 @@ while running:
                     player_hand = []
                     deal_cards(dealer_hand, player_hand, game)
                     can_act = True
+                    scoring = False
             else:
                 if buttons[0].collidepoint(event.pos) and player_score < 21 and can_act:
                     player_hand.append(game.deck.deal_card())
                 elif buttons[1].collidepoint(event.pos):
                     can_act = False
+                elif len(buttons) == 3:
+                    if buttons[2].collidepoint(event.pos):
+                        scoring = False
+                        new_game = False
+                        end_game = False
+                        playing = False
+                        dealer_hand = []
+                        player_hand = []
     # If player has reached 21 after hitting
     if can_act and player_score >= 21:
         can_act = False
 
     if end_game and scoring is False:
-        settle_bets(player_hand, dealer_hand, player, 10)
+        new_game = settle_bets(player_hand, dealer_hand, player, 10)
         scoring = True
 
 
