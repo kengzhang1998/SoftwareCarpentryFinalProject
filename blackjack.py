@@ -6,7 +6,6 @@ The player can customize game settings at the start of the game.
 """
 
 # This is the main file for the final project
-
 from deck_model import *
 import pygame
 
