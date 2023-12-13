@@ -1,4 +1,4 @@
-""" 
+"""
 This module is a Pygame based blackjack game, where
 the player is dealt cards and try to beat the dealer
 with a hand as close to but not exceeding 21 as possible.
@@ -24,7 +24,7 @@ def display_hand(curr_hand, x, y, is_dealer=False):
     Displays a hand of cards at specified coordinates.
     For the dealer's first turn, shows one card face down.
     """
-    
+
     for index, item in enumerate(curr_hand):
         if is_dealer and index == 1:
             image = pygame.image.load('images/card_back.png')
@@ -79,7 +79,7 @@ def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
             new_bet = curr_bet
             condition = 'draw'
             message = "You both get blackjack, it's a draw!"
-        else:                        # Only player has blackjack, wins 2.5 * bet
+        else:                      # Only player has blackjack, wins 2.5 * bet
             new_bet = curr_bet * 2.5
             condition = 'win'
             message = "You win blackjack! Congratulations!"
@@ -87,7 +87,8 @@ def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
         condition = 'loss'
         message = "Dealer gets blackjack! You lose"
     else:
-        if player_value > dealer_value or dealer_value > 21:  # Dealer busts or smaller than player
+        # Dealer busts or smaller than player
+        if player_value > dealer_value or dealer_value > 21:
             new_bet = curr_bet * 2
             condition = 'win'
             message = "You won this round!"
@@ -132,7 +133,7 @@ warning_status = -1       # Tracks the warning message to be displayed
 warning_texts = ["You don't have enough chips to place this bet!",
                  "Please make a bet before beginning round!",
                  "You don't have enough chips to double your bet",
-                 "Please only add chips when your remaining chips is less than 500"]
+                 "Please only add chips when your remaining chips < 500"]
 results = False           # Display game summary when user clicks 'Summary'
 round_message = ''        # Message that displays results at end of each round
 
@@ -157,14 +158,16 @@ def make_button(x, y, w, h, curr_text):
 
 
 # Button method
-def make_buttons(betting_status, playing_status, curr_player, new_game_status, end_game_status):
+def make_buttons(betting_status, playing_status,
+                 curr_player, new_game_status, end_game_status):
     """
     Creates interactive buttons based on game status.
     Args:
         betting_status (bool): whether betting is in session
         playing_status (bool): whether round has started
         new_game_status (bool): whether new game is being called
-        curr_player (object): Current player.
+        curr_player (object): Current player
+        end_game_status (bool): whether the summary will be displayed
     Returns:
         list: Interactive buttons for game actions.
     """
@@ -191,7 +194,9 @@ def make_buttons(betting_status, playing_status, curr_player, new_game_status, e
         button_list.append(double)
         # Display records
         records = curr_player.get_records()
-        score_text = game_font.render(f'Wins: {records[0]} Losses: {records[1]} Draws: {records[2]}', True, white)
+        score_text = game_font.render(f'Wins: {records[0]} Losses:\
+                                      {records[1]} Draws: {records[2]}',
+                                      True, white)
         screen.blit(score_text, (15, 840))
     if new_game_status:
         next_game = make_button(350, 50, 300, 100, 'NEW GAME')
@@ -286,21 +291,30 @@ def draw_score(curr_score, x, y, text):
         y (int): The y-coordinate for the score.
         text (str): Additional text to display alongside the score.
     """
-    screen.blit(text_font.render(f'{text} [{curr_score}]', True, black), (x, y))
+    screen.blit(text_font.render(f'{text} [{curr_score}]',
+                                 True, black), (x, y))
 
 
 def display_results():
     """
-    Displays the summary of the game, including chips added, 
+    Displays the summary of the game, including chips added,
     total chips, net earnings, and win/loss/draw records.
     """
     screen.blit(game_font.render('Summary', True, black), (400, 100))
-    screen.blit(game_font.render(f'Chips added: {player.bought_chips}', True, black), (100, 200))
-    screen.blit(game_font.render(f'Chips total: {player.chips}', True, black), (100, 300))
-    screen.blit(game_font.render(f'Net earnings: {player.chips - player.bought_chips}', True, black), (100, 400))
-    screen.blit(game_font.render(f'Win/loss/draw: {player.records[0]}/{player.records[1]}/{player.records[2]}', True, black), (100, 500))
-    screen.blit(game_font.render(f'Win rate: {player.win_probability()*100}%', True, black), (100, 600))
-    screen.blit(game_font.render('Thank you for playing!', True, black), (300, 800))
+    screen.blit(game_font.render(f'Chips added: {player.bought_chips}',
+                                 True, black), (100, 200))
+    screen.blit(game_font.render(f'Chips total: {player.chips}',
+                                 True, black), (100, 300))
+    screen.blit(game_font.render(f'Net earnings:\
+                                 {player.chips -player.bought_chips}',
+                                 True, black), (100, 400))
+    screen.blit(game_font.render(f'Win/loss/draw: {player.records[0]}/\
+                                 {player.records[1]}/{player.records[2]}',
+                                 True, black), (100, 500))
+    screen.blit(game_font.render(f'Win rate: {player.win_probability()*100}%',
+                                 True, black), (100, 600))
+    screen.blit(game_font.render('Thank you for playing!', True, black),
+                                (300, 800))
 
 
 while running:
@@ -331,8 +345,10 @@ while running:
                 dealer_hand.append(deck.deal_card())
             else:
                 end_game = True       # Ready to be settled
-                screen.blit(game_font.render(round_message, True, black), (100, 600))
-            display_hand(dealer_hand, 100, 200)     # Reviews dealer's hidden card
+                screen.blit(game_font.render(round_message, True, black),
+                            (100, 600))
+            # Reviews dealer's hidden card
+            display_hand(dealer_hand, 100, 200)
             draw_score(dealer_score, 150, 550, "Dealer score")
         else:         # Display dealer's hidden card
             display_hand(dealer_hand, 100, 200, True)
@@ -342,7 +358,8 @@ while running:
 
     # User is entering bet amount
     if input_active:
-        display_text(f'Please enter amount you want to bet: {user_text}', 100, 200)
+        display_text(f'Please enter amount you want to bet: {user_text}',
+                     100, 200)
 
     # Display warning message
     if warning_status >= 0:
@@ -387,13 +404,16 @@ while running:
                     can_act = True
                     scoring = False
             else:
-                if buttons[0].collidepoint(event.pos) and player_score < 21 and can_act:
+                if (buttons[0].collidepoint(event.pos) and
+                        player_score < 21 and can_act):
                     warning_status = -1
                     player_hand.append(deck.deal_card())
                 elif buttons[1].collidepoint(event.pos):
                     warning_status = -1
                     can_act = False
-                elif buttons[2].collidepoint(event.pos) and player_score < 21 and can_act and len(player_hand) == 2:
+                elif (buttons[2].collidepoint(event.pos) and
+                        player_score < 21 and can_act and
+                        len(player_hand) == 2):
                     if can_bet(player.chips, round_bet):
                         player_hand.append(deck.deal_card())
                         player.bet(round_bet)
@@ -435,7 +455,8 @@ while running:
 
     # Perform bet settling
     if end_game and scoring is False:
-        new_game, round_message = settle_bets(player_hand, dealer_hand, player, round_bet)
+        new_game, round_message = settle_bets(player_hand, dealer_hand,
+                                              player, round_bet)
         scoring = True
 
     # Update portion of the screen
