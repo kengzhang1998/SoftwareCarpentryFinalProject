@@ -195,8 +195,8 @@ def make_buttons(betting_status, playing_status,
         button_list.append(double)
         # Display records
         records = curr_player.get_records()
-        score_text = game_font.render(f'Wins: {records[0]} Losses:\
-                                      {records[1]} Draws: {records[2]}',
+        score_text = game_font.render(f'Wins: {records[0]} Losses: '
+                                      f'{records[1]} Draws: {records[2]}',
                                       True, white)
         screen.blit(score_text, (15, 840))
     if new_game_status:
@@ -306,11 +306,11 @@ def display_results():
                                  True, black), (100, 200))
     screen.blit(game_font.render(f'Chips total: {player.chips}',
                                  True, black), (100, 300))
-    screen.blit(game_font.render(f'Net earnings:\
-                                 {player.chips -player.bought_chips}',
+    screen.blit(game_font.render(f'Net earnings: '
+                                 f'{player.chips - player.bought_chips}',
                                  True, black), (100, 400))
-    screen.blit(game_font.render(f'Win/loss/draw: {player.records[0]}/\
-                                 {player.records[1]}/{player.records[2]}',
+    screen.blit(game_font.render(f'Win/loss/draw: {player.records[0]}/'
+                                 f'{player.records[1]}/{player.records[2]}',
                                  True, black), (100, 500))
     screen.blit(game_font.render(f'Win rate: {player.win_probability()*100}%',
                                  True, black), (100, 600))
