@@ -42,7 +42,8 @@ warning_status = -1       # Tracks the warning message to be displayed
 warning_texts = ["You don't have enough chips to place this bet!",
                  "Please make a bet before beginning round!",
                  "You don't have enough chips to double your bet",
-                 "Please only add chips when your remaining chips < 500"]
+                 "Please only add chips when your remaining chips < 500",
+                 "Please enter an integer only!"]
 results = False           # Display game summary when user clicks 'Summary'
 round_message = ''        # Message that displays results at end of each round
 
@@ -436,13 +437,17 @@ while running:
         if event.type == pygame.KEYDOWN:
             if input_active:
                 if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
-                    round_bet = int(user_text)
-                    if can_bet(player.chips, round_bet):
-                        betting = False
-                        player.bet(round_bet)
-                    else:
-                        round_bet = 0
-                        warning_status = 0
+                    try:
+                        round_bet = int(user_text)
+                        if can_bet(player.chips, round_bet):
+                            betting = False
+                            player.bet(round_bet)
+                            warning_status = -1
+                        else:
+                            round_bet = 0
+                            warning_status = 0
+                    except ValueError:
+                        warning_status = 4
                     input_active = False
                     user_text = ''
                 elif event.key == pygame.K_BACKSPACE:
