@@ -13,6 +13,51 @@ import pygame
 pygame.init()
 
 
+# Constants
+WIDTH, HEIGHT = 1000, 1000
+card_width, card_height = 200, 300
+card_gap = 20
+black = (0, 0, 0)
+white = (255, 255, 255)
+red = (255, 0, 0)
+green = (0, 128, 0)
+button_font = pygame.font.SysFont('arial', 45)
+game_font = pygame.font.SysFont('comicsansms', 30)
+text_font = pygame.font.SysFont('times new roman', 30)
+timer = pygame.time.Clock()
+fps = 60
+
+# Game variables
+deck = Deck()
+playing = False           # Tracks if the round is active
+can_act = False           # Tracks if the player can take actions
+end_game = False          # Tracks if the end game is reached
+scoring = False           # Tracks if scoring can happen
+new_game = False          # Allows for a new game
+betting = True            # Tracks if the user is in betting stage or not
+input_active = False      # Allows user to enter bet amount if active
+user_text = ''            # User input into betting text inbox
+round_bet = 0             # User betting amount
+warning_status = -1       # Tracks the warning message to be displayed
+warning_texts = ["You don't have enough chips to place this bet!",
+                 "Please make a bet before beginning round!",
+                 "You don't have enough chips to double your bet",
+                 "Please only add chips when your remaining chips < 500"]
+results = False           # Display game summary when user clicks 'Summary'
+round_message = ''        # Message that displays results at end of each round
+
+# Initialize variables that update/reset each round
+dealer_hand = []
+player_hand = []
+player_score = 0
+dealer_score = 0
+
+# Set up display, caption, clock
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Blackjack game")
+clock = pygame.time.Clock()
+
+
 def display_hand(curr_hand, x, y, is_dealer=False):
     """
     :param curr_hand: the given hand to be displayed
@@ -102,51 +147,6 @@ def settle_bets(curr_player_hand, curr_dealer_hand, curr_player, curr_bet):
     curr_player.tally(condition)
     curr_player.settle(new_bet)
     return True, message
-
-
-# Constants
-WIDTH, HEIGHT = 1000, 1000
-card_width, card_height = 200, 300
-card_gap = 20
-black = (0, 0, 0)
-white = (255, 255, 255)
-red = (255, 0, 0)
-green = (0, 128, 0)
-button_font = pygame.font.SysFont('arial', 45)
-game_font = pygame.font.SysFont('comicsansms', 30)
-text_font = pygame.font.SysFont('times new roman', 30)
-timer = pygame.time.Clock()
-fps = 60
-
-# Game variables
-deck = Deck()
-playing = False           # Tracks if the round is active
-can_act = False           # Tracks if the player can take actions
-end_game = False          # Tracks if the end game is reached
-scoring = False           # Tracks if scoring can happen
-new_game = False          # Allows for a new game
-betting = True            # Tracks if the user is in betting stage or not
-input_active = False      # Allows user to enter bet amount if active
-user_text = ''            # User input into betting text inbox
-round_bet = 0             # User betting amount
-warning_status = -1       # Tracks the warning message to be displayed
-warning_texts = ["You don't have enough chips to place this bet!",
-                 "Please make a bet before beginning round!",
-                 "You don't have enough chips to double your bet",
-                 "Please only add chips when your remaining chips < 500"]
-results = False           # Display game summary when user clicks 'Summary'
-round_message = ''        # Message that displays results at end of each round
-
-# Initialize variables that update/reset each round
-dealer_hand = []
-player_hand = []
-player_score = 0
-dealer_score = 0
-
-# Set up display, caption, clock
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Blackjack game")
-clock = pygame.time.Clock()
 
 
 def make_button(x, y, w, h, curr_text):
